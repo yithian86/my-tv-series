@@ -32,13 +32,10 @@ export class AppComponent implements OnInit {
       inputEpisode: new FormControl("", Validators.required)
     });
 
-    // Default form values
-    // this.setFormValues();
-
-    this.retrieveMySeries2();
+    this.retrieveMySeries();
   }
 
-  private setFormValues = () => {
+  private retrieveMySeries = () => {
     this.appService.retrieveMySeries().subscribe(
       response => {
         this.mySeries = JSON.parse(response["_body"]);
@@ -50,26 +47,22 @@ export class AppComponent implements OnInit {
     );
   }
 
-  private retrieveMySeries2 = () => {
-    this.appService.retrieveMySeries2().subscribe(
-      response => {
-        const watchlistPage: any = response["_body"];
-        console.log(watchlistPage);
-      }
-    );
-  }
-
   public searchBtnAction = (): void => {
+    this.errorMessage = undefined;
+
     // Retrieve input values
     const inputNameString: string = this.searchForm.controls["inputName"].value;
+
     let inputSeasonString: string = this.searchForm.controls["inputSeason"].value;
     if (Number(inputSeasonString) < 10) {
       inputSeasonString = "0" + inputSeasonString;
     }
+
     let inputEpisodeString: string = this.searchForm.controls["inputEpisode"].value;
     if (Number(inputEpisodeString) < 10) {
       inputEpisodeString = "0" + inputEpisodeString;
     }
+
     // Compose search string
     const searchString: string = `${inputNameString} s${inputSeasonString}e${inputEpisodeString}`;
 
@@ -93,7 +86,7 @@ export class AppComponent implements OnInit {
   }
 
   public getMagnetLink = (dirtyLink: string) => {
-    let cleanLink: string = dirtyLink
+    const cleanLink: string = dirtyLink
       .replace("data-nop title=\"Torrent magnet link\" href=\"", "")
       .replace("&dn=", "")
       .substring(0, dirtyLink.length - 3);

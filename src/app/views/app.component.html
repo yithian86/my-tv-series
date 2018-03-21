@@ -1,42 +1,49 @@
-<!--The content below is only a placeholder and can be replaced.-->
+<!--                  Title                   -->
 <div style="text-align:center">
   <h1>
     Welcome to {{ 'sto cazzo' }}!
   </h1>
 </div>
 
-<form [formGroup]="searchForm">
-  <h2>Scavenge your tv series: </h2>
 
-  <div class="SearchWrapper">
-    <input class="InputName" type="text" formControlName="inputName" required/>
-    <input class="InputSeason" style="width:32px" type="number" value="8" formControlName="inputSeason" required/>
-    <input class="InputEpisode" style="width:32px" type="number" value="5" formControlName="inputEpisode" required/>
-    <button class="btn btn-primary searchButton" (click)="searchBtnAction()">Search!</button>
-  </div>
+<!--             Search torrent               -->
+<div style="float: left">
+  <form [formGroup]="searchForm">
+    <h2>Scavenge your tv series: </h2>
 
-  <table>
-    <tr style="text-align:center">
-      <th>Torrent</th>
-      <th>Size</th>
-      <th>Seeders</th>
-      <th>Date</th>
-    </tr>
+    <div class="SearchWrapper">
+      <input class="InputName" type="text" formControlName="inputName" required/>
+      <input class="InputSeason" style="width:32px" type="number" value="8" formControlName="inputSeason" required/>
+      <input class="InputEpisode" style="width:32px" type="number" value="5" formControlName="inputEpisode" required/>
+      <button class="btn btn-primary searchButton" (click)="searchBtnAction()">Search!</button>
+    </div>
 
-    <tr *ngFor="let res of searchResult; let i = index" [attr.data-index]="i">
-      <td>
-        <a [href]=getMagnetLink(res)>{{i + 1}}: {{ getMagnetTitle(titleResult[i]) }}</a>
-      </td>
-      <td style="text-align:center">{{ getMagnetSize(sizeResult[i]) }}</td>
-      <td style="text-align:center">{{ getMagnetSeeders(seedersResult[i]) }}</td>
-      <!-- <td style="text-align:center">{{getMagnetDate(dateResult[i])}}</td> -->
-    </tr>
-  </table>
+    <table>
+      <tr style="text-align:center">
+        <th>Torrent</th>
+        <th>Size</th>
+        <th>Seeders</th>
+        <th>Date</th>
+      </tr>
 
-  <div>{{errorMessage}}</div>
-</form>
+      <tr *ngFor="let res of searchResult; let i = index" [attr.data-index]="i">
+        <td>
+          <a [href]=getMagnetLink(res)>{{i + 1}}: {{ getMagnetTitle(titleResult[i]) }}</a>
+        </td>
+        <td style="text-align:center">{{ getMagnetSize(sizeResult[i]) }}</td>
+        <td style="text-align:center">{{ getMagnetSeeders(seedersResult[i]) }}</td>
+        <!-- <td style="text-align:center">{{getMagnetDate(dateResult[i])}}</td> -->
+      </tr>
+    </table>
 
-<div>
+    <div>{{errorMessage}}</div>
+  </form>
+</div>
+
+
+<!--          My tv series list            -->
+<div style="float: right">
+  <h3 style="text-align: center">Watchlist</h3>
   <table>
     <tr style="text-align:center">
       <th>Title</th>
@@ -46,9 +53,11 @@
 
     <tr *ngFor="let series of mySeries; let i = index" [attr.data-index]="i">
       <td>{{ series.name }}</td>
-      <td style="text-align:center">{{ series.season < 10 ? "0" + series.season : series.season }}</td>
-      <td style="text-align:center">{{ series.episode < 10 ? "0" + series.episode : series.episode }}</td>
-      <!-- <td style="text-align:center">{{getMagnetDate(dateResult[i])}}</td> -->
+      <td style="text-align:center">{{ series.season
+        < 10 ? "0" + series.season : series.season }}</td>
+          <td style="text-align:center">{{ series.episode
+            < 10 ? "0" + series.episode : series.episode }}</td>
+              <!-- <td style="text-align:center">{{getMagnetDate(dateResult[i])}}</td> -->
     </tr>
   </table>
 </div>
