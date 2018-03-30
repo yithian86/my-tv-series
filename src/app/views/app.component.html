@@ -1,8 +1,6 @@
 <!--                  Title                   -->
 <div style="text-align:center">
-  <h1>
-    Welcome to {{ 'sto cazzo' }}!
-  </h1>
+  <h1>Welcome to {{ 'sto cazzo' }}!</h1>
 </div>
 
 
@@ -55,10 +53,12 @@
     </tr>
 
     <tr *ngFor="let series of mySeriesList; let i = index" [attr.data-index]="i">
-      <td><button class="btn btn-primary searchButton" (click)="selectSeries(series, i)">O</button></td>
+      <td>
+        <button class="btn btn-primary searchButton" (click)="selectSeries(series, i)">O</button>
+      </td>
       <td>{{ series.name }}</td>
-      <td style="text-align:center">{{ series.season < 10 ? "0" + series.season : series.season }}</td>
-      <td style="text-align:center">{{ series.episode < 10 ? "0" + series.episode : series.episode }}</td>
+      <td style="text-align:center">{{ getSeriesNumberValue(series.season) }}</td>
+      <td style="text-align:center">{{ getSeriesNumberValue(series.episode) }}</td>
       <!-- <td style="text-align:center">{{getMagnetDate(dateResult[i])}}</td> -->
     </tr>
   </table>

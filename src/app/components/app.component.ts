@@ -64,6 +64,8 @@ export class AppComponent implements OnInit {
 
   public getMagnetSize = (size: string) => size ? size.replace("<td class=\"nobr center\"> ", "").replace("&nbsp;", " ") : "";
 
+  public getSeriesNumberValue = (value: string) => Number(value) < 10 ? "0" + value : value;
+
 
 // ------------------------------------------------------ ACTIONS -------------------------------------------------------- //
 public searchBtnAction = (): void => {
