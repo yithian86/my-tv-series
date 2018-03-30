@@ -17,8 +17,4 @@ export class AppService {
       .get(`${this.baseUrl}/search.php?q=${keyString}`);
       // .map((res: Response) => res.json());
   }
-
-  public retrieveMySeries(): Observable<any> {
-    return this.http.get("../../assets/my-series.json");
-  }
 }
