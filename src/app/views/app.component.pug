@@ -4,19 +4,20 @@ div(style="text-align:center")
 
 
 //-             Search torrent               -//
-div(style="float:left; width:50%")
+div(style="float:left; width:50%; margin:18px")
 
   //-             Search form               -//
   form('[formGroup]'="searchForm")
     h3 Scavenge your tv series:
 
-    div(class="SearchWrapper")
+    .SearchWrapper
       input.InputName(type="text" formControlName="inputName" required)
-      input.InputSeason(style="width:32px" type="number" value="8" formControlName="inputSeason" required)
-      input.InputEpisode(style="width:32px" type="number" value="5" formControlName="inputEpisode" required)
-      button(class="btn btn-primary searchButton" '(click)'="searchBtnAction()") Search!
-      button(class="btn btn-primary searchButton" '(click)'="updateMySeries()") Update my series!
+      input.InputNumber(style="width:32px" type="number" value="8" formControlName="inputSeason" required)
+      input.InputNumber(style="width:32px" type="number" value="5" formControlName="inputEpisode" required)
+      button.SearchButton(class="btn btn-primary" '(click)'="searchBtnAction()") Search!
+      button.SearchButton(class="btn btn-primary" '(click)'="updateMySeries()") Update my series!
 
+  //-             Search results               -//
   table(style="width:100%" class="table table-striped table-hover")
     thead(class="theader-dark")
       tr
@@ -37,7 +38,7 @@ div(style="float:left; width:50%")
 
 
 //-          My tv series list            -//
-div(style="float:right; width:22%; margin:18px")
+div(style="float:right; width:30%; margin:18px")
 
   h3(style="text-align:center") Watchlist
 
@@ -47,15 +48,18 @@ div(style="float:right; width:22%; margin:18px")
         th(style="text-align:center") Title
         th(style="text-align:center") Season
         th(style="text-align:center") Episode
+        th(style="text-align:center") Next Airing
 
     tbody
       tr(
         '*ngFor'="let series of mySeriesList; let i=index"
         '[attr.data-index]'="i"
         '(click)'="selectSeries(series, i)"
-        class="clickable"
+        '[ngClass]'="{'clickable': true, 'AirsToday': airsToday(series), 'AiredBeforeToday': airedBeforeToday(series)}"
       )
         td {{ series.name }}
         td(style="text-align:center") {{ getSeriesNumberValue(series.season) }}
         td(style="text-align:center") {{ getSeriesNumberValue(series.episode) }}
-        //- td(style="text-align:center") {{ getMagnetDate(dateResult[i]) }}
+        td(style="text-align:center; font-size: 12px")
+          div {{ series.nextAiringDate | date }}
+          div {{ series.nextAiringTitle }}

@@ -11,16 +11,37 @@
 	color: white !important;
 }
 
+.SearchWrapper {
+	margin-bottom: 16px;
+}
+
 .InputName {
-	width: 45%;
-  height: 40px;
-  margin: 8px;
+	width: 50%;
+	height: 40px;
+	padding: 8px;
+  margin-right: 8px;
   vertical-align: middle;
 }
 
 .InputNumber {
-	width: 5% !important;
-  height: 40px;
-  margin: 4px;
+	width: 7% !important;
+	height: 40px;
+	padding: 8px;
+  margin-right: 8px;
   vertical-align: middle;
+}
+
+.SearchButton {
+	height: 40px;
+	margin-right: 8px;
+}
+
+.AiredBeforeToday {
+	background-color: lightcoral !important;
+	color: white !important;
+}
+
+.AirsToday {
+	background-color: lightgreen !important;
+	color: white !important;
 }

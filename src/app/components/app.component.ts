@@ -35,7 +35,7 @@ export class AppComponent implements OnInit {
       inputEpisode: new FormControl("", Validators.required)
     });
 
-    this.retrieveMySeries();
+    this.retrieveMySeries(true);
   }
 
   public selectSeries = (series: any, index: number): void => {
@@ -45,6 +45,22 @@ export class AppComponent implements OnInit {
     this.searchForm.controls["inputEpisode"].setValue(series.episode);
   }
 
+  public airedBeforeToday = (series: any): boolean => series.nextAiringDate < new Date().getTime();
+
+  public airsToday = (series: any): boolean => {
+    const seriesDate: Date = new Date(series.nextAiringDate);
+    const today: Date = new Date();
+    return today.getDate() === seriesDate.getDate() &&
+      today.getMonth() === seriesDate.getMonth() &&
+      today.getFullYear() === seriesDate.getFullYear();
+  }
+
+
+  // ----------------------------------------------- GETTERS AND SETTERS -------------------------------------------------- //
+  public getMagnetTitle = (title: string) => title ? title.replace(/data-nop title=\"Torrent magnet link\" href="magnet:\?[0-9A-Za-z=:]*&dn=/g, "") : "";
+
+  public getMagnetDate = (date: string) => date ? date.replace("<td class=\"center\" title=\"", "").replace("&nbsp;", "-") : "";
+
   public getMagnetLink = (dirtyLink: string) => {
     const cleanLink: string = dirtyLink
       .replace("data-nop title=\"Torrent magnet link\" href=\"", "")
@@ -53,12 +69,6 @@ export class AppComponent implements OnInit {
     // Remove 'unsafe' string from link and other unwanted crap
     return this.sanitizer.bypassSecurityTrustUrl(cleanLink);
   }
-
-
-  // ----------------------------------------------- GETTERS AND SETTERS -------------------------------------------------- //
-  public getMagnetTitle = (title: string) => title ? title.replace(/data-nop title=\"Torrent magnet link\" href="magnet:\?[0-9A-Za-z=:]*&dn=/g, "") : "";
-
-  public getMagnetDate = (date: string) => date ? date.replace("<td class=\"center\" title=\"", "").replace("&nbsp;", "-") : "";
 
   public getMagnetSeeders = (date: string) => date ? date.replace("<td class=\"green center\">", "") : "";
 
@@ -91,13 +101,18 @@ public searchBtnAction = (): void => {
 
 
   // --------------------------------------------------- SERVICES ------------------------------------------------------- //
-  public retrieveMySeries = () => {
+  public retrieveMySeries = (isFirstLoading?: boolean) => {
     this.firebaseService.retrieveMySeries().subscribe(
       response => {
         if (response && response.length > 0) {
           this.mySeriesList = response.sort((a, b) => a.name < b.name ? -1 : 1);
-          console.log(this.mySeriesList);
-          this.selectSeries(this.mySeriesList[0], 0);
+          // console.log(this.mySeriesList);
+          // retireve last aired dates
+          this.retrieveLastAiredDates();
+
+          if (isFirstLoading) {
+            this.selectSeries(this.mySeriesList[0], 0);
+          }
         } else {
           this.errorMessage = "Error retrieving watchlist, or watchlist empty!";
         }
@@ -110,6 +125,12 @@ public searchBtnAction = (): void => {
     // Update series list
     this.mySeriesList[this.currentSeriesIndex].season = this.searchForm.controls["inputSeason"].value;
     this.mySeriesList[this.currentSeriesIndex].episode = this.searchForm.controls["inputEpisode"].value;
+
+    // Remove unuseful fields from the list before update
+    this.mySeriesList.forEach(series => {
+      delete series.nextAiringDate;
+      delete series.nextAiringTitle;
+    });
 
     // Update file
     this.firebaseService.updateMySeries(this.mySeriesList).subscribe(
@@ -143,6 +164,57 @@ public searchBtnAction = (): void => {
       },
       error => this.errorMessage = <any>error
     );
+  }
+
+  public retrieveLastAiredDates = () => {
+    this.mySeriesList.forEach((series: any) => {
+      if (!!series.wikiLink) {
+        this.appService.searchEpisodes(series.wikiLink).subscribe(
+          response => {
+            let nextEpIndex: number = -1;
+            const today: number = new Date().getTime();
+            const tableList: Array<string> = response["_body"]
+              .replace(/<table class="plainlinks metadata ambox ambox-style ambox-Plot" role="presentation">(?:.|\n)*?<\/table>/g, "")
+              .match(/<table class="wikitable plainrowheaders wikiepisodetable[^>]*>(?:.|\n)*?(Directed by)(?:.|\n)*?(Original air date)(?:.|\n)*?<\/table>/g);
+            const table: string = tableList && tableList.length > 0  ? tableList[tableList.length - 1] : "";
+
+            // Next airing episode date
+            let nextDates: Array<any> = !!table ? table.match(/(([0-9]+)-([0-9]+)-([0-9]+)){1,}/g) : [];
+            if (nextDates && nextDates.length > 0) {
+              nextDates.forEach((date: string, i: number) => nextDates[i] = new Date(date).getTime());
+              nextDates = nextDates.sort();
+              series.nextAiringDate = nextDates.find((date: number, index: number) => {
+                nextEpIndex = index;
+                return today < date;
+              });
+              if (!series.nextAiringDate) {
+                series.nextAiringDate = nextDates[nextDates.length - 1];
+              }
+            }
+
+            // Next airing episode title
+            const nextTitles: Array<any> = !!table ? table.match(/<td class="summary" style="text-align:left">(?:.|\n)*?<\/td>/g) : [];
+            if (nextTitles && nextTitles.length > 0) {
+              series.nextAiringTitle = nextEpIndex !== -1 ? nextTitles[nextEpIndex] : nextTitles[nextTitles.length - 1];
+              series.nextAiringTitle = series.nextAiringTitle
+                .replace(/<td class="summary" style="text-align:left">/, "")
+                .replace(/<\/td>/, "")
+                .replace(/<sup id="cite_ref-(?:.|\n)*?<\/sup>/, "")
+                .replace(/<a href="(?:.|\n)*?" title="(?:.|\n)*?">/, "")
+                .replace(/<\/a>/, "")
+                .replace(/<img alt=(?:.|\n)*?\/>/, "");
+            }
+
+            // if (series.name === "x files") {
+            //   console.log(series.nextAiringTitle);
+            //   console.log(response["_body"]);
+            //   console.log(nextTitles);
+            // }
+          },
+          error => this.errorMessage = <any>error
+        );
+      }
+    });
   }
 
 

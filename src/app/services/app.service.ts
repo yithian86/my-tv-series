@@ -17,4 +17,9 @@ export class AppService {
       .get(`${this.baseUrl}/search.php?q=${keyString}`);
       // .map((res: Response) => res.json());
   }
+
+  public searchEpisodes(url: string): Observable<any> {
+    return this.http
+      .get(url);
+  }
 }
