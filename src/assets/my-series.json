@@ -1,37 +1,36 @@
-[
-	{
-		"name": "the walking dead",
-		"season": 8,
-		"episode": 13
-	},
-	{
-		"name": "x files",
-		"season": 11,
-		"episode": 9
-	},
-	{
-		"name": "the big bang theory",
-		"season": 11,
-		"episode": 17
-	},
-	{
-		"name": "the last man on earth",
-		"season": 4,
-		"episode": 12
-	},
-	{
-		"name": "counterpart",
-		"season": 1,
-		"episode": 9
-	},
-	{
-		"name": "ash vs evil dead",
-		"season": 3,
-		"episode": 5
-	},
-	{
-		"name": "alex inc",
-		"season": 1,
-		"episode": 2
-	}
-]
+[ {
+  "episode" : 2,
+  "name" : "alex inc",
+  "season" : 1,
+  "wikiLink" : "https://en.wikipedia.org/wiki/Alex,_Inc.#Episodes"
+}, {
+  "episode" : 5,
+  "name" : "ash vs evil dead",
+  "season" : 3,
+  "wikiLink" : "https://en.wikipedia.org/wiki/Ash_vs_Evil_Dead#Episodes"
+}, {
+  "episode" : 9,
+  "name" : "counterpart",
+  "season" : 1,
+  "wikiLink" : "https://en.wikipedia.org/wiki/Counterpart_(TV_series)#Episodes"
+}, {
+  "episode" : 17,
+  "name" : "the big bang theory",
+  "season" : 11,
+  "wikiLink" : "https://en.wikipedia.org/wiki/List_of_The_Big_Bang_Theory_episodes"
+}, {
+  "episode" : 12,
+  "name" : "the last man on earth",
+  "season" : 4,
+  "wikiLink" : "https://en.wikipedia.org/wiki/List_of_The_Last_Man_on_Earth_episodes"
+}, {
+  "episode" : 13,
+  "name" : "the walking dead",
+  "season" : 8,
+  "wikiLink" : "https://en.wikipedia.org/wiki/List_of_The_Walking_Dead_episodes"
+}, {
+  "episode" : 9,
+  "name" : "x files",
+  "season" : 11,
+  "wikiLink" : "https://en.wikipedia.org/wiki/List_of_The_X-Files_episodes"
+} ]
