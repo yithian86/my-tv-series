@@ -1,0 +1,26 @@
+.clickable {
+	cursor: pointer;
+}
+
+/* .table-striped>tbody>tr:nth-of-type(odd) {
+	background-color: lightblue;
+} */
+
+.table-hover tbody tr:hover td, .table-hover tbody tr:hover td a, .table-hover tbody tr:hover th, .theader-dark {
+	background-color: #337ab7;
+	color: white !important;
+}
+
+.InputName {
+	width: 45%;
+  height: 40px;
+  margin: 8px;
+  vertical-align: middle;
+}
+
+.InputNumber {
+	width: 5% !important;
+  height: 40px;
+  margin: 4px;
+  vertical-align: middle;
+}
