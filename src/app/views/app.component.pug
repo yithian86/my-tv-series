@@ -8,7 +8,7 @@ div(style="float:left; width:50%")
 
   //-             Search form               -//
   form('[formGroup]'="searchForm")
-    h2 Scavenge your tv series:
+    h3 Scavenge your tv series:
 
     div(class="SearchWrapper")
       input.InputName(type="text" formControlName="inputName" required)
@@ -17,23 +17,23 @@ div(style="float:left; width:50%")
       button(class="btn btn-primary searchButton" '(click)'="searchBtnAction()") Search!
       button(class="btn btn-primary searchButton" '(click)'="updateMySeries()") Update my series!
 
-    table(style="width:100%" class="table table-striped table-hover")
-      thead(class="theader-dark")
-        tr
-          th(style="text-align:center") Torrent
-          th(style="text-align:center") Size
-          th(style="text-align:center") Seeders
-          //- th(style="text-align:center") Date
+  table(style="width:100%" class="table table-striped table-hover")
+    thead(class="theader-dark")
+      tr
+        th(style="text-align:center") Torrent
+        th(style="text-align:center") Size
+        th(style="text-align:center") Seeders
+        //- th(style="text-align:center") Date
 
-      tbody
-        tr('*ngFor'="let res of searchResult; let i=index" '[attr.data-index]'="i")
-          td
-            a('[href]'="getMagnetLink(res)") {{ getMagnetTitle(titleResult[i]) }}
-          td(style="text-align:center") {{ getMagnetSize(sizeResult[i]) }}
-          td(style="text-align:center") {{ getMagnetSeeders(seedersResult[i]) }}
-          //- td(style="text-align:center") {{getMagnetDate(dateResult[i])}}
+    tbody
+      tr('*ngFor'="let res of searchResult; let i=index" '[attr.data-index]'="i")
+        td
+          a('[href]'="getMagnetLink(res)") {{ getMagnetTitle(titleResult[i]) }}
+        td(style="text-align:center") {{ getMagnetSize(sizeResult[i]) }}
+        td(style="text-align:center") {{ getMagnetSeeders(seedersResult[i]) }}
+        //- td(style="text-align:center") {{getMagnetDate(dateResult[i])}}
 
-    div(style="text-align:center") {{ errorMessage }}
+  div(style="text-align:center") {{ errorMessage }}
 
 
 //-          My tv series list            -//
