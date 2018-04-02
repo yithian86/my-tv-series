@@ -11,6 +11,10 @@
 	color: white !important;
 }
 
+th, td {
+	text-align: center;
+}
+
 .SearchWrapper {
 	margin-bottom: 16px;
 }
@@ -49,4 +53,20 @@
 .IsFinished {
 	background-color: goldenrod !important;
 	color: white !important;
+}
+
+.AiredMessage {
+	font-size: 12px;
+	text-align: left;
+	
+	/* Safari */
+	-webkit-transform: rotate(-45deg);
+	/* Firefox */
+	-moz-transform: rotate(-45deg);
+	/* IE */
+	-ms-transform: rotate(-45deg);
+	/* Opera */
+	-o-transform: rotate(-45deg);
+	/* Internet Explorer */
+	filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
 }

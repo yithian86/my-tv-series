@@ -95,6 +95,27 @@ export class AppComponent implements OnInit {
 
   public getNextAiringEpisodeDate = (series: any): number => series.nextAiringEpisode && series.nextAiringEpisode.date ? series.nextAiringEpisode.date : -1;
 
+  public getWatchlistClasses = (series: any): any => {
+    return {
+      "clickable": true,
+      "HasAlreadyAired": this.hasAlreadyAired(series),
+      "AirsToday": this.airsToday(series),
+      "IsFinished": this.isFinished(series)
+    };
+  }
+
+  public getAiredMessage = (series: any): string => {
+    if (this.hasAlreadyAired(series)) {
+      return "Aired!";
+    } else if (this.airsToday(series)) {
+      return "Airs today!";
+    } else if (this.isFinished(series)) {
+      return "Finished!";
+    } else {
+      return "";
+    }
+  }
+
 
 // ------------------------------------------------------ ACTIONS -------------------------------------------------------- //
 public searchBtnAction = (): void => {

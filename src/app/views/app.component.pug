@@ -21,45 +21,48 @@ div(style="float:left; width:50%; margin:18px")
   table(style="width:100%" class="table table-striped table-hover")
     thead(class="theader-dark")
       tr
-        th(style="text-align:center") Torrent
-        th(style="text-align:center") Size
-        th(style="text-align:center") Seeders
-        //- th(style="text-align:center") Date
+        th Torrent
+        th Size
+        th Seeders
+        //- th Date
 
     tbody
       tr('*ngFor'="let res of searchResult; let i=index" '[attr.data-index]'="i")
-        td
+        td(style="text-align:left !important")
           a('[href]'="getMagnetLink(res)") {{ getMagnetTitle(titleResult[i]) }}
-        td(style="text-align:center") {{ getMagnetSize(sizeResult[i]) }}
-        td(style="text-align:center") {{ getMagnetSeeders(seedersResult[i]) }}
-        //- td(style="text-align:center") {{getMagnetDate(dateResult[i])}}
+        td {{ getMagnetSize(sizeResult[i]) }}
+        td {{ getMagnetSeeders(seedersResult[i]) }}
+        //- td {{getMagnetDate(dateResult[i])}}
 
   div(style="text-align:center") {{ errorMessage }}
 
 
-//-          My tv series list            -//
+//-            My tv series list            -//
 div(style="float:right; width:30%; margin:18px")
 
   h3(style="text-align:center") Watchlist
 
+  //-               table                   -//
   table(class="table table-striped table-hover")
     thead(class="theader-dark")
       tr
-        th(style="text-align:center") Title
-        th(style="text-align:center") Season
-        th(style="text-align:center") Episode
-        th(style="text-align:center") Next Airing
+        th
+        th Title
+        th S
+        th E
+        th Next Airing
 
     tbody
       tr(
         '*ngFor'="let series of mySeriesList; let i=index"
         '[attr.data-index]'="i"
         '(click)'="selectSeries(series, i)"
-        '[ngClass]'="{'clickable': true, 'HasAlreadyAired': hasAlreadyAired(series), 'AirsToday': airsToday(series), 'IsFinished': isFinished(series)}"
+        '[ngClass]'="getWatchlistClasses(series)"
       )
-        td {{ series.name }}
-        td(style="text-align:center") {{ getSeriesNumberValue(series.season) }}
-        td(style="text-align:center") {{ getSeriesNumberValue(series.episode) }}
+        td.AiredMessage {{ getAiredMessage(series) }}
+        td(style="text-align:left !important") {{ series.name }}
+        td {{ getSeriesNumberValue(series.season) }}
+        td {{ getSeriesNumberValue(series.episode) }}
         td(style="text-align:center; font-size: 12px")
           div {{ getNextAiringEpisodeDate(series) | date }}
           div {{ getNextAiringEpisodeTitle(series) }}
