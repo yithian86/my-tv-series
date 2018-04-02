@@ -36,12 +36,17 @@
 	margin-right: 8px;
 }
 
-.AiredBeforeToday {
-	background-color: lightcoral !important;
+.HasAlreadyAired {
+	background-color: lightskyblue !important;
 	color: white !important;
 }
 
 .AirsToday {
 	background-color: lightgreen !important;
+	color: white !important;
+}
+
+.IsFinished {
+	background-color: goldenrod !important;
 	color: white !important;
 }

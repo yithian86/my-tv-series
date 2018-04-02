@@ -45,14 +45,23 @@ export class AppComponent implements OnInit {
     this.searchForm.controls["inputEpisode"].setValue(series.episode);
   }
 
-  public airedBeforeToday = (series: any): boolean => series.nextAiringDate < new Date().getTime();
+  public hasAlreadyAired = (series): boolean => {
+    return series.nextAiringEpisode && series.nextAiringEpisode.ep > series.episode + 1;
+  }
 
   public airsToday = (series: any): boolean => {
-    const seriesDate: Date = new Date(series.nextAiringDate);
-    const today: Date = new Date();
-    return today.getDate() === seriesDate.getDate() &&
-      today.getMonth() === seriesDate.getMonth() &&
-      today.getFullYear() === seriesDate.getFullYear();
+    if (series.nextAiringEpisode && series.nextAiringEpisode.date) {
+      const seriesDate: Date = new Date(series.nextAiringEpisode.date);
+      const today: Date = new Date();
+      return today.getDate() === seriesDate.getDate() &&
+        today.getMonth() === seriesDate.getMonth() &&
+        today.getFullYear() === seriesDate.getFullYear();
+    }
+  }
+
+  public isFinished = (series: any): boolean => {
+    return series.nextAiringEpisode
+      && Number(series.episode) === Number(series.nextAiringEpisode.totalEpisodes);
   }
 
 
@@ -75,6 +84,16 @@ export class AppComponent implements OnInit {
   public getMagnetSize = (size: string) => size ? size.replace("<td class=\"nobr center\"> ", "").replace("&nbsp;", " ") : "";
 
   public getSeriesNumberValue = (value: string) => Number(value) < 10 ? "0" + value : value;
+
+  public getNextAiringEpisodeTitle = (series: any): string => {
+    if (series.nextAiringEpisode && series.nextAiringEpisode.ep) {
+      return `${this.getSeriesNumberValue(series.nextAiringEpisode.ep)} - ${series.nextAiringEpisode.title}`;
+    } else {
+      return "-";
+    }
+  }
+
+  public getNextAiringEpisodeDate = (series: any): number => series.nextAiringEpisode && series.nextAiringEpisode.date ? series.nextAiringEpisode.date : -1;
 
 
 // ------------------------------------------------------ ACTIONS -------------------------------------------------------- //
@@ -107,8 +126,8 @@ public searchBtnAction = (): void => {
         if (response && response.length > 0) {
           this.mySeriesList = response.sort((a, b) => a.name < b.name ? -1 : 1);
           // console.log(this.mySeriesList);
-          // retireve last aired dates
-          this.retrieveLastAiredDates();
+          // retrieve last aired dates
+          this.retrieveNextAiringEpisodes();
 
           if (isFirstLoading) {
             this.selectSeries(this.mySeriesList[0], 0);
@@ -127,10 +146,7 @@ public searchBtnAction = (): void => {
     this.mySeriesList[this.currentSeriesIndex].episode = this.searchForm.controls["inputEpisode"].value;
 
     // Remove unuseful fields from the list before update
-    this.mySeriesList.forEach(series => {
-      delete series.nextAiringDate;
-      delete series.nextAiringTitle;
-    });
+    this.mySeriesList.forEach(series => delete series.nextAiringEpisode);
 
     // Update file
     this.firebaseService.updateMySeries(this.mySeriesList).subscribe(
@@ -145,18 +161,11 @@ public searchBtnAction = (): void => {
   public searchTorrents = (searchString: string) => {
     this.appService.searchTorrents(searchString).subscribe(
       response => {
-        // this.response = response["_body"];
-        // this.searchResult = response["_body"].match(/magnet: ?.*&dn/g);
         this.searchResult = response["_body"].match(/data-nop title=\"Torrent magnet link\" href="magnet:\?[0-9A-Za-z=:]*&dn=/g);
         this.titleResult = response["_body"].match(/data-nop title=\"Torrent magnet link\" href="magnet:\?[0-9A-Za-z=:]*&dn=[a-zA-Z0-9.+-]*/g);
         this.dateResult = response["_body"].match(/<td class="center" title="[0-9 -]*&nbsp;[0-9]*/g);
         this.seedersResult = response["_body"].match(/<td class="green center">[0-9]*/g);
         this.sizeResult = response["_body"].match(/<td class="nobr center"> [0-9.]*&nbsp;[a-zA-Z]*/g);
-        // const tableSection: string = response["_body"]
-        //   .replace(/\r?\n|\r/g, "");
-        // .match(/<tr class="odd" id="torrent_latest_torrents.*<\/tr>/g);
-        // this.response = tableSection;
-        // console.log(this.response);
 
         if (!(this.searchResult && this.searchResult.length > 0)) {
           this.errorMessage = "Sorreh! No episodes available.";
@@ -166,13 +175,21 @@ public searchBtnAction = (): void => {
     );
   }
 
-  public retrieveLastAiredDates = () => {
+  public retrieveNextAiringEpisodes = () => {
+    const today: number = new Date().getTime();
+
     this.mySeriesList.forEach((series: any) => {
       if (!!series.wikiLink) {
+        // Go to the wikipedia page with the list of episodes
         this.appService.searchEpisodes(series.wikiLink).subscribe(
           response => {
+            const nextAiringEpisode: any = {
+              date: "",
+              ep: -1,
+              title: "",
+              totalEpisodes: -1
+            };
             let nextEpIndex: number = -1;
-            const today: number = new Date().getTime();
             const tableList: Array<string> = response["_body"]
               .replace(/<table class="plainlinks metadata ambox ambox-style ambox-Plot" role="presentation">(?:.|\n)*?<\/table>/g, "")
               .match(/<table class="wikitable plainrowheaders wikiepisodetable[^>]*>(?:.|\n)*?(Directed by)(?:.|\n)*?(Original air date)(?:.|\n)*?<\/table>/g);
@@ -183,29 +200,31 @@ public searchBtnAction = (): void => {
             if (nextDates && nextDates.length > 0) {
               nextDates.forEach((date: string, i: number) => nextDates[i] = new Date(date).getTime());
               nextDates = nextDates.sort();
-              series.nextAiringDate = nextDates.find((date: number, index: number) => {
+              nextAiringEpisode.date = nextDates.find((date: number, index: number) => {
                 nextEpIndex = index;
                 return today < date;
               });
-              if (!series.nextAiringDate) {
-                series.nextAiringDate = nextDates[nextDates.length - 1];
+              if (!nextAiringEpisode.date) {
+                nextAiringEpisode.date = nextDates[nextDates.length - 1];
               }
             }
 
-            // Next airing episode title
+            // Next airing episode title and number
             const nextTitles: Array<any> = !!table ? table.match(/<td class="summary" style="text-align:left">(?:.|\n)*?<\/td>/g) : [];
             if (nextTitles && nextTitles.length > 0) {
-              series.nextAiringTitle = nextEpIndex !== -1 ? nextTitles[nextEpIndex] : nextTitles[nextTitles.length - 1];
-              series.nextAiringTitle = series.nextAiringTitle
+              nextAiringEpisode.title = nextEpIndex !== -1 ? nextTitles[nextEpIndex] : nextTitles[nextTitles.length - 1];
+              nextAiringEpisode.title = nextAiringEpisode.title
                 .replace(/<td class="summary" style="text-align:left">/, "")
                 .replace(/<\/td>/, "")
                 .replace(/<sup id="cite_ref-(?:.|\n)*?<\/sup>/, "")
                 .replace(/<a href="(?:.|\n)*?" title="(?:.|\n)*?">/, "")
                 .replace(/<\/a>/, "")
                 .replace(/<img alt=(?:.|\n)*?\/>/, "");
-              const episodeNumber: string = (nextEpIndex !== -1 ? nextEpIndex + 1 : nextTitles.length - 1).toString();
-              series.nextAiringTitle = this.getSeriesNumberValue(episodeNumber) + " - " + series.nextAiringTitle;
+              nextAiringEpisode.ep = (nextEpIndex !== -1 ? nextEpIndex + 1 : nextTitles.length - 1).toString();
+              nextAiringEpisode.totalEpisodes = nextTitles.length;
             }
+
+            series.nextAiringEpisode = nextAiringEpisode;
 
             // if (series.name === "the walking dead") {
             //   console.log(series.nextAiringTitle);
