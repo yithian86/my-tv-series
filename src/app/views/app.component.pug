@@ -15,7 +15,7 @@ div(style="float:left; width:50%; margin:18px")
       input.InputNumber(style="width:32px" type="number" value="8" formControlName="inputSeason" required)
       input.InputNumber(style="width:32px" type="number" value="5" formControlName="inputEpisode" required)
       button.SearchButton(class="btn btn-primary" '(click)'="searchBtnAction()") Search!
-      button.SearchButton(class="btn btn-primary" '(click)'="updateMySeries()") Update my series!
+      button.SearchButton(class="btn btn-primary" '(click)'="updateMySeries(true)") Update my series!
 
   //-             Search results               -//
   table(style="width:100%" class="table table-striped table-hover")
@@ -54,9 +54,9 @@ div(style="float:right; width:30%; margin:18px")
 
     tbody
       tr(
-        '*ngFor'="let series of mySeriesList; let i=index"
+        '*ngFor'="let series of watchList; let i=index"
         '[attr.data-index]'="i"
-        '(click)'="!isFinished(series) ? selectSeries(series, i) : undefined"
+        '(click)'="!isFinished(series) ? selectSeries(i) : undefined"
         '[ngClass]'="getWatchlistClasses(series)"
       )
         td('[ngClass]'="{'AiredMessage': !!getAiredMessage(series)}") {{ getAiredMessage(series) }}
@@ -64,5 +64,23 @@ div(style="float:right; width:30%; margin:18px")
         td {{ getSeriesNumberValue(series.season) }}
         td {{ getSeriesNumberValue(series.episode) }}
         td(style="text-align:center; font-size: 12px")
-          div {{ getNextAiringEpisodeDate(series) | date }}
+          div {{ !!getNextAiringEpisodeDate(series) ? (getNextAiringEpisodeDate(series) | date) : '-' }}
           div {{ getNextAiringEpisodeTitle(series) }}
+
+  //-             Add series form               -//
+  form('[formGroup]'="addSeriesForm")
+    h3(style="text-align:center") Add series:
+
+    .AddSeries__Wrapper
+
+      .AddSeries__InputGroup
+        label.AddSeries__Label Name
+        input.AddSeries__Input(type="text" formControlName="inputName" required)
+
+      .AddSeries__InputGroup
+        label.AddSeries__Label Wiki link
+        input.AddSeries__Input(type="text" formControlName="inputWikiLink" required)
+  
+      .AddSeries__InputGroup
+        button.AddSeries__Button(class="btn btn-primary" '(click)'="addToWatchlist()") Add to watchlist
+        button.AddSeries__Button(class="btn btn-primary" '(click)'="updateMySeries()") Upload watchlist

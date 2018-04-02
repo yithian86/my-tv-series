@@ -13,12 +13,13 @@ import { DomSanitizer } from "@angular/platform-browser";
 export class AppComponent implements OnInit {
   public errorMessage: string;
   public searchForm: FormGroup;
+  public addSeriesForm: FormGroup;
   public searchResult: any;
   public titleResult: any;
   public dateResult: any;
   public seedersResult: any;
   public sizeResult: any;
-  public mySeriesList: Array<any>;
+  public watchList: Array<any>;
   public currentSeriesIndex: number;
 
   public constructor(
@@ -35,14 +36,19 @@ export class AppComponent implements OnInit {
       inputEpisode: new FormControl("", Validators.required)
     });
 
+    this.addSeriesForm = new FormGroup({
+      inputName: new FormControl("", Validators.required),
+      inputWikiLink: new FormControl("", Validators.required)
+    });
+
     this.retrieveMySeries(true);
   }
 
-  public selectSeries = (series: any, index: number): void => {
+  public selectSeries = (index: number): void => {
     this.currentSeriesIndex = index;
-    this.searchForm.controls["inputName"].setValue(series.name);
-    this.searchForm.controls["inputSeason"].setValue(series.season);
-    this.searchForm.controls["inputEpisode"].setValue(series.episode);
+    this.searchForm.controls["inputName"].setValue(this.watchList[index].name);
+    this.searchForm.controls["inputSeason"].setValue(this.watchList[index].season);
+    this.searchForm.controls["inputEpisode"].setValue(this.watchList[index].episode);
   }
 
   public hasAlreadyAired = (series): boolean => {
@@ -93,7 +99,7 @@ export class AppComponent implements OnInit {
     }
   }
 
-  public getNextAiringEpisodeDate = (series: any): number => series.nextAiringEpisode && series.nextAiringEpisode.date ? series.nextAiringEpisode.date : -1;
+  public getNextAiringEpisodeDate = (series: any): number => series.nextAiringEpisode && series.nextAiringEpisode.date ? series.nextAiringEpisode.date : undefined;
 
   public getWatchlistClasses = (series: any): any => {
     return {
@@ -118,7 +124,7 @@ export class AppComponent implements OnInit {
 
 
 // ------------------------------------------------------ ACTIONS -------------------------------------------------------- //
-public searchBtnAction = (): void => {
+  public searchBtnAction = (): void => {
     this.errorMessage = undefined;
 
     // Retrieve input values
@@ -139,19 +145,56 @@ public searchBtnAction = (): void => {
     this.searchTorrents(searchString);
   }
 
+  public addToWatchlist = (): void => {
+    const newSeries: any = {
+      episode: 1,
+      name: this.addSeriesForm.controls["inputName"].value,
+      season: 1,
+      wikiLink: this.addSeriesForm.controls["inputWikiLink"].value
+    };
+
+    // Search for duplicates
+    const mySeriesHashList: Array<string> = this.watchList.map(series => this.getSeriesHash(series));
+    const newSeriesHash: string = this.getSeriesHash(newSeries);
+    if (mySeriesHashList.indexOf(newSeriesHash) === -1) {
+      // Retrack the currently selected series (in search bar)
+      const currentSeriesName: string = this.watchList[this.currentSeriesIndex].name;
+
+      // Add new series to Watchlist
+      this.watchList.push(newSeries);
+
+      // Sort Watchlist
+      this.watchList = this.watchList.sort((a, b) => a.name < b.name ? -1 : 1);
+
+      // Restore currently selected series index
+      this.currentSeriesIndex = this.watchList.findIndex(series => series.name === currentSeriesName);
+
+      // Reset form
+      this.addSeriesForm = new FormGroup({
+        inputName: new FormControl("", Validators.required),
+        inputWikiLink: new FormControl("", Validators.required)
+      });
+
+      console.log("Series added to watchlist!", newSeries);
+    } else {
+      console.log("Series already in watchlist!", newSeries);
+    }
+
+  }
+
 
   // --------------------------------------------------- SERVICES ------------------------------------------------------- //
   public retrieveMySeries = (isFirstLoading?: boolean) => {
     this.firebaseService.retrieveMySeries().subscribe(
       response => {
         if (response && response.length > 0) {
-          this.mySeriesList = response.sort((a, b) => a.name < b.name ? -1 : 1);
-          // console.log(this.mySeriesList);
+          this.watchList = response.sort((a, b) => a.name < b.name ? -1 : 1);
+          // console.log(this.watchList);
           // retrieve last aired dates
           this.retrieveNextAiringEpisodes();
 
           if (isFirstLoading) {
-            this.selectSeries(this.mySeriesList[0], 0);
+            this.selectSeries(0);
           }
         } else {
           this.errorMessage = "Error retrieving watchlist, or watchlist empty!";
@@ -161,16 +204,18 @@ public searchBtnAction = (): void => {
     );
   }
 
-  public updateMySeries = () => {
+  public updateMySeries = (updateEpNumbers?: boolean) => {
     // Update series list
-    this.mySeriesList[this.currentSeriesIndex].season = this.searchForm.controls["inputSeason"].value;
-    this.mySeriesList[this.currentSeriesIndex].episode = this.searchForm.controls["inputEpisode"].value;
+    if (updateEpNumbers) {
+      this.watchList[this.currentSeriesIndex].season = this.searchForm.controls["inputSeason"].value;
+      this.watchList[this.currentSeriesIndex].episode = this.searchForm.controls["inputEpisode"].value;
+    }
 
     // Remove unuseful fields from the list before update
-    this.mySeriesList.forEach(series => delete series.nextAiringEpisode);
+    this.watchList.forEach(series => delete series.nextAiringEpisode);
 
     // Update file
-    this.firebaseService.updateMySeries(this.mySeriesList).subscribe(
+    this.firebaseService.updateMySeries(this.watchList).subscribe(
       response => {
         console.log("Watchlist updated successfully!");
         this.retrieveMySeries();
@@ -199,7 +244,7 @@ public searchBtnAction = (): void => {
   public retrieveNextAiringEpisodes = () => {
     const today: number = new Date().getTime();
 
-    this.mySeriesList.forEach((series: any) => {
+    this.watchList.forEach((series: any) => {
       if (!!series.wikiLink) {
         // Go to the wikipedia page with the list of episodes
         this.appService.searchEpisodes(series.wikiLink).subscribe(
@@ -214,7 +259,9 @@ public searchBtnAction = (): void => {
             const tableList: Array<string> = response["_body"]
               .replace(/<table class="plainlinks metadata ambox ambox-style ambox-Plot" role="presentation">(?:.|\n)*?<\/table>/g, "")
               .match(/<table class="wikitable plainrowheaders wikiepisodetable[^>]*>(?:.|\n)*?(Directed by)(?:.|\n)*?(Original air date)(?:.|\n)*?<\/table>/g);
-            const table: string = tableList && tableList.length > 0  ? tableList[tableList.length - 1] : "";
+            // const table: string = tableList && tableList.length > 0  ? tableList[tableList.length - 1] : "";
+            const seasonIndex: number = (series.season <= tableList.length ? series.season : tableList.length) - 1;
+            const table: string = tableList && tableList.length > 0  ? tableList[seasonIndex] : "";
 
             // Next airing episode date
             let nextDates: Array<any> = !!table ? table.match(/(([0-9]+)-([0-9]+)-([0-9]+)){1,}/g) : [];
@@ -263,6 +310,12 @@ public searchBtnAction = (): void => {
   // ----------------------------------------------------- UTILS ------------------------------------------------------- //
   private getUniqueList = (arr: Array<any>) => {
     return arr.filter((elem, index, self) => index === self.indexOf(elem));
+  }
+
+  private getSeriesHash = (series: any) => {
+    const sName: string = JSON.stringify(series.name.toLowerCase());
+    // const sWikiLink: string = JSON.stringify(series.wikiLink);
+    return sName;
   }
 
   // TODO: uncomment
