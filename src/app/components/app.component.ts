@@ -97,7 +97,7 @@ export class AppComponent implements OnInit {
 
   public getWatchlistClasses = (series: any): any => {
     return {
-      "clickable": true,
+      "clickable": !this.isFinished(series),
       "HasAlreadyAired": this.hasAlreadyAired(series),
       "AirsToday": this.airsToday(series),
       "IsFinished": this.isFinished(series)
@@ -108,7 +108,7 @@ export class AppComponent implements OnInit {
     if (this.hasAlreadyAired(series)) {
       return "Aired!";
     } else if (this.airsToday(series)) {
-      return "Airs today!";
+      return "Today!";
     } else if (this.isFinished(series)) {
       return "Finished!";
     } else {

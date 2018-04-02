@@ -56,10 +56,10 @@ div(style="float:right; width:30%; margin:18px")
       tr(
         '*ngFor'="let series of mySeriesList; let i=index"
         '[attr.data-index]'="i"
-        '(click)'="selectSeries(series, i)"
+        '(click)'="!isFinished(series) ? selectSeries(series, i) : undefined"
         '[ngClass]'="getWatchlistClasses(series)"
       )
-        td.AiredMessage {{ getAiredMessage(series) }}
+        td('[ngClass]'="{'AiredMessage': !!getAiredMessage(series)}") {{ getAiredMessage(series) }}
         td(style="text-align:left !important") {{ series.name }}
         td {{ getSeriesNumberValue(series.season) }}
         td {{ getSeriesNumberValue(series.episode) }}

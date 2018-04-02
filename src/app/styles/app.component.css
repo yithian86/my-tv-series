@@ -45,28 +45,33 @@ th, td {
 	color: white !important;
 }
 
-.AirsToday {
+tr.AirsToday {
 	background-color: lightgreen !important;
 	color: white !important;
 }
 
-.IsFinished {
+tr.IsFinished {
 	background-color: goldenrod !important;
 	color: white !important;
 }
+.HasAlreadyAired>td, tr.AirsToday>td, tr.IsFinished>td {
+	background-color: transparent !important;
+}
 
 .AiredMessage {
-	font-size: 12px;
-	text-align: left;
+	font-size: 14px;
+	font-weight: bold;
+	text-align: center;
+	color: white;
 	
 	/* Safari */
-	-webkit-transform: rotate(-45deg);
+	-webkit-transform: rotate(-30deg);
 	/* Firefox */
-	-moz-transform: rotate(-45deg);
+	-moz-transform: rotate(-30deg);
 	/* IE */
-	-ms-transform: rotate(-45deg);
+	-ms-transform: rotate(-30deg);
 	/* Opera */
-	-o-transform: rotate(-45deg);
+	-o-transform: rotate(-30deg);
 	/* Internet Explorer */
 	filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
 }
