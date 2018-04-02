@@ -6,11 +6,14 @@ div(style="text-align:center")
 //-             Search torrent               -//
 div(style="float:left; width:60%; margin:12px")
   app-search-torrent(
+    '[triggerError]'="triggerError"
     '[updateMySeries]'="updateMySeries"
     '[currentSeriesIndex]'="currentSeriesIndex"
     '[searchForm]'="searchForm"
     '[watchList]'="watchList"
   )
+
+  div('[ngClass]'="{'ErrorMessageBox': !!errorMessage}") {{ errorMessage }}
 
 
 //-            My tv series list            -//

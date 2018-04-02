@@ -11,12 +11,12 @@ import { DomSanitizer } from "@angular/platform-browser";
   providers: [AppService, FirebaseService]
 })
 export class AppSearchTorrentComponent implements OnInit {
+  @Input() triggerError: Function;
   @Input() updateMySeries: Function;
   @Input() currentSeriesIndex: number;
   @Input() searchForm: FormGroup;
   @Input() watchList: Array<any>;
 
-  public errorMessage: string;
   public searchResult: any;
   public titleResult: any;
   public dateResult: any;
@@ -54,7 +54,7 @@ export class AppSearchTorrentComponent implements OnInit {
 
   // ------------------------------------------------------ ACTIONS -------------------------------------------------------- //
   public searchBtnAction = (): void => {
-    this.errorMessage = undefined;
+    this.triggerError(undefined);
 
     // Retrieve input values
     const inputNameString: string = this.searchForm.controls["inputName"].value;
@@ -86,10 +86,10 @@ export class AppSearchTorrentComponent implements OnInit {
         this.sizeResult = response["_body"].match(/<td class="nobr center"> [0-9.]*&nbsp;[a-zA-Z]*/g);
 
         if (!(this.searchResult && this.searchResult.length > 0)) {
-          this.errorMessage = "Sorreh! No episodes available.";
+          this.triggerError("Sorreh! No episodes available.");
         }
       },
-      error => this.errorMessage = <any>error
+      error => this.triggerError(<any>error)
     );
   }
 }

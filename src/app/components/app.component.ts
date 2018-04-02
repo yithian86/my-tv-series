@@ -47,6 +47,8 @@ export class AppComponent implements OnInit {
     this.searchForm.controls["inputEpisode"].setValue(this.watchList[index].episode);
   }
 
+  public triggerError = (message: string) => this.errorMessage = message;
+
 
   // --------------------------------------------------- SERVICES ------------------------------------------------------- //
   public retrieveMySeries = () => {
@@ -58,10 +60,10 @@ export class AppComponent implements OnInit {
           // retrieve last aired dates
           this.retrieveNextAiringEpisodes();
         } else {
-          this.errorMessage = "Error retrieving watchlist, or watchlist empty!";
+          this.triggerError("Error retrieving watchlist, or watchlist empty!");
         }
       },
-      error => this.errorMessage = <any>error
+      error => this.triggerError(<any>error)
     );
   }
 
@@ -81,7 +83,7 @@ export class AppComponent implements OnInit {
         console.log("Watchlist updated successfully!");
         this.retrieveMySeries();
       },
-      error => this.errorMessage = <any>error
+      error => this.triggerError(<any>error)
     );
   }
 
@@ -149,7 +151,7 @@ export class AppComponent implements OnInit {
             //   console.log(nextTitles);
             // }
           },
-          error => this.errorMessage = <any>error
+          error => this.triggerError(<any>error)
         );
       }
     });
