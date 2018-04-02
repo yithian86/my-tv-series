@@ -203,9 +203,11 @@ public searchBtnAction = (): void => {
                 .replace(/<a href="(?:.|\n)*?" title="(?:.|\n)*?">/, "")
                 .replace(/<\/a>/, "")
                 .replace(/<img alt=(?:.|\n)*?\/>/, "");
+              const episodeNumber: string = (nextEpIndex !== -1 ? nextEpIndex + 1 : nextTitles.length - 1).toString();
+              series.nextAiringTitle = this.getSeriesNumberValue(episodeNumber) + " - " + series.nextAiringTitle;
             }
 
-            // if (series.name === "x files") {
+            // if (series.name === "the walking dead") {
             //   console.log(series.nextAiringTitle);
             //   console.log(response["_body"]);
             //   console.log(nextTitles);
