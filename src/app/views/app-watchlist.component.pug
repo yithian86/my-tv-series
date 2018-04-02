@@ -1,0 +1,26 @@
+h3(style="text-align:center") Watchlist
+
+//-               table                   -//
+table(class="table table-striped table-hover")
+  thead(class="theader-dark")
+    tr
+      th
+      th Title
+      th S
+      th E
+      th Next Airing
+
+  tbody
+    tr(
+      '*ngFor'="let series of watchList; let i=index"
+      '[attr.data-index]'="i"
+      '(click)'="!isFinished(series) ? selectSeries(i) : undefined"
+      '[ngClass]'="getWatchlistClasses(series)"
+    )
+      td('[ngClass]'="{'AiredMessage': !!getAiredMessage(series)}") {{ getAiredMessage(series) }}
+      td(style="text-align:left !important") {{ series.name }}
+      td {{ getSeriesNumberValue(series.season) }}
+      td {{ getSeriesNumberValue(series.episode) }}
+      td(style="text-align:center; font-size: 12px")
+        div {{ !!getNextAiringEpisodeDate(series) ? (getNextAiringEpisodeDate(series) | date) : '-' }}
+        div {{ getNextAiringEpisodeTitle(series) }}

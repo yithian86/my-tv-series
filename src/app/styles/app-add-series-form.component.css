@@ -1,0 +1,24 @@
+.AddSeries__Wrapper {
+	text-align: center;
+}
+
+.AddSeries__InputGroup {
+	margin: 8px;
+}
+
+.AddSeries__Label {
+	width: 15%;
+	text-align: right;
+}
+
+.AddSeries__Input {
+	width: 70%;
+	height: 40px;
+	padding: 8px;
+  vertical-align: middle;
+}
+
+.AddSeries__Button {
+	width: 45%;
+	height: 40px;
+}

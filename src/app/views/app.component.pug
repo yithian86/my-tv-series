@@ -4,83 +4,26 @@ div(style="text-align:center")
 
 
 //-             Search torrent               -//
-div(style="float:left; width:50%; margin:18px")
-
-  //-             Search form               -//
-  form('[formGroup]'="searchForm")
-    h3 Scavenge your tv series:
-
-    .SearchWrapper
-      input.InputName(type="text" formControlName="inputName" required)
-      input.InputNumber(style="width:32px" type="number" value="8" formControlName="inputSeason" required)
-      input.InputNumber(style="width:32px" type="number" value="5" formControlName="inputEpisode" required)
-      button.SearchButton(class="btn btn-primary" '(click)'="searchBtnAction()") Search!
-      button.SearchButton(class="btn btn-primary" '(click)'="updateMySeries(true)") Update my series!
-
-  //-             Search results               -//
-  table(style="width:100%" class="table table-striped table-hover")
-    thead(class="theader-dark")
-      tr
-        th Torrent
-        th Size
-        th Seeders
-        //- th Date
-
-    tbody
-      tr('*ngFor'="let res of searchResult; let i=index" '[attr.data-index]'="i")
-        td(style="text-align:left !important")
-          a('[href]'="getMagnetLink(res)") {{ getMagnetTitle(titleResult[i]) }}
-        td {{ getMagnetSize(sizeResult[i]) }}
-        td {{ getMagnetSeeders(seedersResult[i]) }}
-        //- td {{getMagnetDate(dateResult[i])}}
-
-  div(style="text-align:center") {{ errorMessage }}
+div(style="float:left; width:60%; margin:12px")
+  app-search-torrent(
+    '[updateMySeries]'="updateMySeries"
+    '[currentSeriesIndex]'="currentSeriesIndex"
+    '[searchForm]'="searchForm"
+    '[watchList]'="watchList"
+  )
 
 
 //-            My tv series list            -//
-div(style="float:right; width:30%; margin:18px")
-
-  h3(style="text-align:center") Watchlist
-
-  //-               table                   -//
-  table(class="table table-striped table-hover")
-    thead(class="theader-dark")
-      tr
-        th
-        th Title
-        th S
-        th E
-        th Next Airing
-
-    tbody
-      tr(
-        '*ngFor'="let series of watchList; let i=index"
-        '[attr.data-index]'="i"
-        '(click)'="!isFinished(series) ? selectSeries(i) : undefined"
-        '[ngClass]'="getWatchlistClasses(series)"
-      )
-        td('[ngClass]'="{'AiredMessage': !!getAiredMessage(series)}") {{ getAiredMessage(series) }}
-        td(style="text-align:left !important") {{ series.name }}
-        td {{ getSeriesNumberValue(series.season) }}
-        td {{ getSeriesNumberValue(series.episode) }}
-        td(style="text-align:center; font-size: 12px")
-          div {{ !!getNextAiringEpisodeDate(series) ? (getNextAiringEpisodeDate(series) | date) : '-' }}
-          div {{ getNextAiringEpisodeTitle(series) }}
+div(style="float:right; width:33%; margin:12px")
+  app-watchlist(
+    '[selectSeries]'="selectSeries"
+    '[watchList]'="watchList"
+  )
 
   //-             Add series form               -//
-  form('[formGroup]'="addSeriesForm")
-    h3(style="text-align:center") Add series:
-
-    .AddSeries__Wrapper
-
-      .AddSeries__InputGroup
-        label.AddSeries__Label Name
-        input.AddSeries__Input(type="text" formControlName="inputName" required)
-
-      .AddSeries__InputGroup
-        label.AddSeries__Label Wiki link
-        input.AddSeries__Input(type="text" formControlName="inputWikiLink" required)
+  app-add-series-form(
+    '[updateMySeries]'="updateMySeries"
+    '[addSeriesForm]'="addSeriesForm"
+    '[watchList]'="watchList"
+  )
   
-      .AddSeries__InputGroup
-        button.AddSeries__Button(class="btn btn-primary" '(click)'="addToWatchlist()") Add to watchlist
-        button.AddSeries__Button(class="btn btn-primary" '(click)'="updateMySeries()") Upload watchlist

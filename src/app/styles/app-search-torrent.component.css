@@ -1,0 +1,24 @@
+.SearchWrapper {
+	margin-bottom: 16px;
+}
+
+.InputName {
+	width: 50%;
+	height: 40px;
+	padding: 8px;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+.InputNumber {
+	width: 7% !important;
+	height: 40px;
+	padding: 8px;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+.SearchButton {
+	height: 40px;
+	margin-right: 8px;
+}

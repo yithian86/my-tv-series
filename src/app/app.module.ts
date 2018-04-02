@@ -6,11 +6,17 @@ import { HttpClientModule, HttpClient } from "@angular/common/http";
 
 // Components
 import { AppComponent } from "./components/app.component";
+import { AppSearchTorrentComponent } from "./components/app-search-torrent.component";
+import { AppWatchlistComponent } from "./components/app-watchlist.component";
+import { AppAddSeriesFormComponent } from "./components/app-add-series-form.component";
 
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    AppSearchTorrentComponent,
+    AppWatchlistComponent,
+    AppAddSeriesFormComponent
   ],
   imports: [
     BrowserModule,
