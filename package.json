@@ -1,6 +1,6 @@
 {
   "name": "my-tv-series-downloader",
-  "version": "0.3.7",
+  "version": "0.4.0",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
