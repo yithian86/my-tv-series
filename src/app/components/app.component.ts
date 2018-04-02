@@ -110,6 +110,11 @@ export class AppComponent implements OnInit {
             // Next airing episode date
             let nextDates: Array<any> = !!table ? table.match(/(([0-9]+)-([0-9]+)-([0-9]+)){1,}/g) : [];
             if (nextDates && nextDates.length > 0) {
+              // Remove 'extra' date when wikipedia adds more than one date for the first episode (broadcast, online, ...)
+              if (table.match("broadcast") && nextDates.length > 1) {
+                nextDates.splice(0, 1);
+              }
+
               nextDates.forEach((date: string, i: number) => nextDates[i] = new Date(date).getTime());
               nextDates = nextDates.sort();
               nextAiringEpisode.date = nextDates.find((date: number, index: number) => {
