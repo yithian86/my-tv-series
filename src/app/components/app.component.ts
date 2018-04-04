@@ -27,7 +27,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.searchForm = new FormGroup({
-      inputName: new FormControl("", Validators.required),
+      inputName: new FormControl({value: "", disabled: true}, Validators.required),
       inputSeason: new FormControl("", Validators.required),
       inputEpisode: new FormControl("", Validators.required)
     });
@@ -88,7 +88,7 @@ export class AppComponent implements OnInit {
   }
 
   public retrieveNextAiringEpisodes = () => {
-    const today: number = new Date().getTime();
+    const today: Date = new Date();
 
     this.watchList.forEach((series: any) => {
       if (!!series.wikiLink) {
@@ -121,7 +121,9 @@ export class AppComponent implements OnInit {
               nextDates = nextDates.sort();
               nextAiringEpisode.date = nextDates.find((date: number, index: number) => {
                 nextEpIndex = index;
-                return today < date;
+                return today.getUTCDate() <= new Date(date).getUTCDate()
+                  && today.getUTCMonth() <= new Date(date).getUTCMonth()
+                  && today.getUTCFullYear() <= new Date(date).getUTCFullYear();
               });
               if (!nextAiringEpisode.date) {
                 nextAiringEpisode.date = nextDates[nextDates.length - 1];

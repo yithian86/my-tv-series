@@ -3,7 +3,7 @@ form('[formGroup]'="searchForm")
   h3 Scavenge your tv series:
 
   .SearchWrapper
-    input.InputName(type="text" formControlName="inputName" required disabled)
+    input.InputName(type="text" formControlName="inputName" required)
     input.InputNumber(style="width:32px" type="number" value="8" formControlName="inputSeason" required)
     input.InputNumber(style="width:32px" type="number" value="5" formControlName="inputEpisode" required)
     button.SearchButton(class="btn btn-primary" '(click)'="searchBtnAction()") Search!
