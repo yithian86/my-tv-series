@@ -4,12 +4,12 @@
 }
 
 tr.AirsToday {
-	background-color: lightgreen !important;
+	background-color: lightcoral !important;
 	color: white !important;
 }
 
 tr.IsFinished {
-	background-color: goldenrod !important;
+	background-color: green !important;
 	color: white !important;
 }
 .HasAlreadyAired>td, tr.AirsToday>td, tr.IsFinished>td {
