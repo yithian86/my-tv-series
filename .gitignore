@@ -42,3 +42,6 @@ testem.log
 .DS_Store
 Thumbs.db
 /Start.bat
+/.firebaserc
+/database.rules.json
+/firebase.json
