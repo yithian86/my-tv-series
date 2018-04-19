@@ -1,0 +1,43 @@
+{
+  "watching" : [ {
+    "episode" : 2,
+    "name" : "alex inc",
+    "season" : 1,
+    "wikiLink" : "https://en.wikipedia.org/wiki/Alex,_Inc.#Episodes"
+  }, {
+    "episode" : 4,
+    "name" : "american crime story",
+    "season" : 2,
+    "wikiLink" : "https://en.wikipedia.org/wiki/The_Assassination_of_Gianni_Versace:_American_Crime_Story#Episodes"
+  }, {
+    "episode" : 6,
+    "name" : "ash vs evil dead",
+    "season" : 3,
+    "wikiLink" : "https://en.wikipedia.org/wiki/Ash_vs_Evil_Dead#Episodes"
+  }, {
+    "episode" : 10,
+    "name" : "counterpart",
+    "season" : 1,
+    "wikiLink" : "https://en.wikipedia.org/wiki/Counterpart_(TV_series)#Episodes"
+  }, {
+    "episode" : 18,
+    "name" : "the big bang theory",
+    "season" : 11,
+    "wikiLink" : "https://en.wikipedia.org/wiki/List_of_The_Big_Bang_Theory_episodes"
+  }, {
+    "episode" : 13,
+    "name" : "the last man on earth",
+    "season" : 4,
+    "wikiLink" : "https://en.wikipedia.org/wiki/List_of_The_Last_Man_on_Earth_episodes"
+  }, {
+    "episode" : 14,
+    "name" : "the walking dead",
+    "season" : 8,
+    "wikiLink" : "https://en.wikipedia.org/wiki/List_of_The_Walking_Dead_episodes"
+  }, {
+    "episode" : 10,
+    "name" : "x files",
+    "season" : 11,
+    "wikiLink" : "https://en.wikipedia.org/wiki/List_of_The_X-Files_episodes"
+  } ]
+}
