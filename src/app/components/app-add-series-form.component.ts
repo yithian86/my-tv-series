@@ -8,7 +8,7 @@ import { FormGroup, FormBuilder, Validators, FormControl } from "@angular/forms"
   providers: []
 })
 export class AppAddSeriesFormComponent implements OnInit {
-  @Input() updateMySeries: Function;
+  @Input() uploadWatchlist: Function;
   @Input() addSeriesForm: FormGroup;
   @Input() currentSeriesIndex: number;
   @Input() watchList: Array<any>;

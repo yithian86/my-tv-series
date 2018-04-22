@@ -17,7 +17,15 @@ export class FirebaseService {
       .map((res: Response) => res.json());
   }
 
-  public updateMySeries(seriesList: any): Observable<any> {
+  public updateSeries(seriesObj: any, index: number): Observable<any> {
+    return this.http.put(`${this.baseUrl}/watching/${index}.json`, JSON.stringify(seriesObj));
+  }
+
+  public deleteSeries(index: number): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/watching/${index}.json`);
+  }
+
+  public updateWatchlist(seriesList: any): Observable<any> {
     return this.http.put(`${this.baseUrl}/watching.json`, JSON.stringify(seriesList));
   }
 }

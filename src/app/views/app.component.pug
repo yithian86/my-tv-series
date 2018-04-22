@@ -7,7 +7,7 @@ div(style="text-align:center")
 div(style="float:left; width:60%; margin:12px")
   app-search-torrent(
     '[triggerError]'="triggerError"
-    '[updateMySeries]'="updateMySeries"
+    '[uploadCurrentSeries]'="uploadCurrentSeries"
     '[currentSeriesIndex]'="currentSeriesIndex"
     '[searchForm]'="searchForm"
     '[watchList]'="watchList"
@@ -20,12 +20,13 @@ div(style="float:left; width:60%; margin:12px")
 div(style="float:right; width:33%; margin:12px")
   app-watchlist(
     '[selectSeries]'="selectSeries"
+    '[triggerError]'="triggerError"
     '[watchList]'="watchList"
   )
 
   //-             Add series form               -//
   app-add-series-form(
-    '[updateMySeries]'="updateMySeries"
+    '[uploadWatchlist]'="uploadWatchlist"
     '[addSeriesForm]'="addSeriesForm"
     '[watchList]'="watchList"
   )

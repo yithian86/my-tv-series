@@ -12,7 +12,7 @@ import { DomSanitizer } from "@angular/platform-browser";
 })
 export class AppSearchTorrentComponent implements OnInit {
   @Input() triggerError: Function;
-  @Input() updateMySeries: Function;
+  @Input() uploadCurrentSeries: Function;
   @Input() currentSeriesIndex: number;
   @Input() searchForm: FormGroup;
   @Input() watchList: Array<any>;

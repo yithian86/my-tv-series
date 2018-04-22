@@ -12,8 +12,16 @@ tr.IsFinished {
 	background-color: green !important;
 	color: white !important;
 }
+
 .HasAlreadyAired>td, tr.AirsToday>td, tr.IsFinished>td {
 	background-color: transparent !important;
+}
+
+td.DeleteButton {
+	vertical-align: middle;
+	text-align: center;
+	font-weight: bold;
+	cursor: pointer;
 }
 
 .AiredMessage {
