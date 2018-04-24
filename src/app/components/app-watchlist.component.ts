@@ -75,11 +75,11 @@ export class AppWatchlistComponent implements OnInit {
   public removeSeries = (seriesIndex: number): void => {
     console.log("Removing: ", this.watchList[seriesIndex]);
     this.watchList.splice(seriesIndex, 1);
-    this.firebaseService.deleteSeries(seriesIndex).subscribe(
-      response => {
-        console.log("Series removed successfully!", this.watchList);
-      },
-      error => this.triggerError(<any>error)
-    );
+    // this.firebaseService.deleteSeries(seriesIndex).subscribe(
+    //   response => {
+    //     console.log("Series removed successfully!", this.watchList);
+    //   },
+    //   error => this.triggerError(<any>error)
+    // );
   }
 }
