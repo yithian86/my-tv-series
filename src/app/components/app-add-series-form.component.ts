@@ -31,9 +31,14 @@ export class AppAddSeriesFormComponent implements OnInit {
     // Search for duplicates
     const mySeriesHashList: Array<string> = this.watchList.map(series => this.getSeriesHash(series));
     const newSeriesHash: string = this.getSeriesHash(newSeries);
+    const hasSeriesSelected: boolean = this.currentSeriesIndex && this.currentSeriesIndex > -1;
+
     if (mySeriesHashList.indexOf(newSeriesHash) === -1) {
-      // Retrack the currently selected series (in search bar)
-      const currentSeriesName: string = this.watchList[this.currentSeriesIndex].name;
+      let currentSeriesName: string;
+      if (hasSeriesSelected) {
+        // Retrack the currently selected series (in search bar)
+        currentSeriesName = this.watchList[this.currentSeriesIndex].name;
+      }
 
       // Add new series to Watchlist
       this.watchList.push(newSeries);
@@ -41,8 +46,10 @@ export class AppAddSeriesFormComponent implements OnInit {
       // Sort Watchlist
       this.watchList = this.watchList.sort((a, b) => a.name < b.name ? -1 : 1);
 
-      // Restore currently selected series index
-      this.currentSeriesIndex = this.watchList.findIndex(series => series.name === currentSeriesName);
+      if (hasSeriesSelected) {
+        // Restore currently selected series index
+        this.currentSeriesIndex = this.watchList.findIndex(series => series.name === currentSeriesName);
+      }
 
       // Reset form
       this.addSeriesForm = new FormGroup({
