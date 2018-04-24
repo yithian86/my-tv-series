@@ -58,9 +58,12 @@ export class AppComponent implements OnInit {
     this.firebaseService.retrieveMySeries().subscribe(
       response => {
         if (response && response.length > 0) {
-          this.watchList = response.sort((a, b) => a.name < b.name ? -1 : 1);
+          // Clean watchlist from empty entries
+          this.watchList = response.filter((wEntry: any) => !!wEntry)
+          // Sort watchlist by series name
+            .sort((a, b) => a.name < b.name ? -1 : 1);
 
-          // retrieve last aired dates
+          // Retrieve last aired dates
           this.watchList.forEach((series: any) => {
             this.retrieveNextAiringEpisode(series);
           });
