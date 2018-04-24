@@ -4,7 +4,7 @@ import { FirebaseService } from "../services/firebase.service";
 @Component({
   selector: "app-watchlist",
   templateUrl: "../views/app-watchlist.component.html",
-  styleUrls: ["../styles/app-watchlist.component.css"],
+  styleUrls: ["../styles/app-watchlist.scss"],
   providers: [FirebaseService]
 })
 export class AppWatchlistComponent implements OnInit {

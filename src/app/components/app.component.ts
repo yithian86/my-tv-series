@@ -7,7 +7,7 @@ import { DomSanitizer } from "@angular/platform-browser";
 @Component({
   selector: "app-root",
   templateUrl: "../views/app.component.html",
-  styleUrls: ["../styles/app.component.css"],
+  styleUrls: ["../styles/app.scss"],
   providers: [AppService, FirebaseService]
 })
 export class AppComponent implements OnInit {

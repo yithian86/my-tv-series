@@ -7,7 +7,7 @@ import { DomSanitizer } from "@angular/platform-browser";
 @Component({
   selector: "app-search-torrent",
   templateUrl: "../views/app-search-torrent.component.html",
-  styleUrls: ["../styles/app-search-torrent.component.css"],
+  styleUrls: ["../styles/app-search-torrent.scss"],
   providers: [AppService, FirebaseService]
 })
 export class AppSearchTorrentComponent implements OnInit {

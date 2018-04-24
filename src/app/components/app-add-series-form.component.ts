@@ -4,7 +4,7 @@ import { FormGroup, FormBuilder, Validators, FormControl } from "@angular/forms"
 @Component({
   selector: "app-add-series-form",
   templateUrl: "../views/app-add-series-form.component.html",
-  styleUrls: ["../styles/app-add-series-form.component.css"],
+  styleUrls: ["../styles/app-add-series-form.scss"],
   providers: []
 })
 export class AppAddSeriesFormComponent implements OnInit {
