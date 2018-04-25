@@ -6,18 +6,18 @@
 
     //- Input fields
     input.InputName(type="text" formControlName="inputName" required)
-    input.InputNumber(style="width:32px" type="number" value="8" formControlName="inputSeason" required)
-    input.InputNumber(style="width:32px" type="number" value="5" formControlName="inputEpisode" required)
+    input.InputNumber(type="number" value="8" formControlName="inputSeason" required)
+    input.InputNumber(type="number" value="5" formControlName="inputEpisode" required)
 
     //- Buttons
-    button.SearchButton(class="" '(click)'="searchBtnAction()") Search!
-    button.SearchButton(class="btn btn-primary" '(click)'="uploadCurrentSeries()") Update my series!
+    button.SearchButton('(click)'="searchBtnAction()") Search!
+    button.SearchButton('(click)'="uploadCurrentSeries()") Update my series!
 
 
 //-             SEARCH RESULTS               -//
 .SearchTorrent__TableWrapper
-  table.Table
-    thead(class="theader-dark")
+  table.SearchTorrent__Table
+    thead.SearchTorrent__TableHeader
       tr
         th Torrent
         th Size
@@ -26,7 +26,7 @@
 
     tbody
       tr('*ngFor'="let res of searchResult; let i=index" '[attr.data-index]'="i")
-        td(style="text-align:left !important")
+        td.SearchTorrent__TableMagnetLink
             a('[href]'="getMagnetLink(res)") {{ getMagnetTitle(titleResult[i]) }}
         td {{ getMagnetSize(sizeResult[i]) }}
         td {{ getMagnetSeeders(seedersResult[i]) }}
