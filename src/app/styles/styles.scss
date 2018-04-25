@@ -1,12 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
+@import '_variables';
+@import '../../../node_modules/bootstrap/scss/bootstrap';
 
 .clickable {
 	cursor: pointer;
 }
-
-/* .table-striped>tbody>tr:nth-of-type(odd) {
-	background-color: lightblue;
-} */
 
 .table-hover tbody tr:hover td, .table-hover tbody tr:hover td a, .table-hover tbody tr:hover th, .theader-dark {
 	background-color: #337ab7;
@@ -24,4 +22,10 @@ th, td {
   font-size: 14px;
   text-align: center;
   color: white;
+}
+
+.ComponentTitle {
+  margin-bottom: 6px;
+  font-size: 28px;
+  font-weight: 600;
 }
