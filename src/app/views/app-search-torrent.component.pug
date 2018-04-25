@@ -1,27 +1,33 @@
-//-             Search form               -//
-form('[formGroup]'="searchForm")
-  h3 Scavenge your tv series:
+//-             SEARCH FORM               -//
+.SearchTorrent__FormWrapper
+  form('[formGroup]'="searchForm")
+    //- Title
+    .SearchTorrent__Title Scavenge your tv series:
 
-  .SearchWrapper
+    //- Input fields
     input.InputName(type="text" formControlName="inputName" required)
     input.InputNumber(style="width:32px" type="number" value="8" formControlName="inputSeason" required)
     input.InputNumber(style="width:32px" type="number" value="5" formControlName="inputEpisode" required)
-    button.SearchButton(class="btn btn-primary" '(click)'="searchBtnAction()") Search!
+
+    //- Buttons
+    button.SearchButton(class="" '(click)'="searchBtnAction()") Search!
     button.SearchButton(class="btn btn-primary" '(click)'="uploadCurrentSeries()") Update my series!
 
-//-             Search results               -//
-table(style="width:100%; margin-top: 12px" class="table table-striped table-hover")
-  thead(class="theader-dark")
-    tr
-      th Torrent
-      th Size
-      th Seeders
-      //- th Date
 
-  tbody
-    tr('*ngFor'="let res of searchResult; let i=index" '[attr.data-index]'="i")
-      td(style="text-align:left !important")
-          a('[href]'="getMagnetLink(res)") {{ getMagnetTitle(titleResult[i]) }}
-      td {{ getMagnetSize(sizeResult[i]) }}
-      td {{ getMagnetSeeders(seedersResult[i]) }}
-      //- td {{getMagnetDate(dateResult[i])}}
+//-             SEARCH RESULTS               -//
+.SearchTorrent__TableWrapper
+  table.Table
+    thead(class="theader-dark")
+      tr
+        th Torrent
+        th Size
+        th Seeders
+        //- th Date
+
+    tbody
+      tr('*ngFor'="let res of searchResult; let i=index" '[attr.data-index]'="i")
+        td(style="text-align:left !important")
+            a('[href]'="getMagnetLink(res)") {{ getMagnetTitle(titleResult[i]) }}
+        td {{ getMagnetSize(sizeResult[i]) }}
+        td {{ getMagnetSeeders(seedersResult[i]) }}
+        //- td {{getMagnetDate(dateResult[i])}}

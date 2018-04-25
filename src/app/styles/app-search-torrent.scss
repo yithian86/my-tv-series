@@ -1,24 +1,49 @@
-.SearchWrapper {
-	margin-bottom: 16px;
-}
+@import "styles.scss";
 
-.InputName {
-	width: 50%;
-	height: 40px;
-	padding: 8px;
-  margin-right: 8px;
-  vertical-align: middle;
-}
+.SearchTorrent {
 
-.InputNumber {
-	width: 7% !important;
-	height: 40px;
-	padding: 8px;
-  margin-right: 8px;
-  vertical-align: middle;
-}
+	// FORM WRAPPER
+	&__FormWrapper {
+		margin-bottom: 16px;
 
-.SearchButton {
-	height: 40px;
-	margin-right: 8px;
+		.InputName {
+			width: 50%;
+			height: 40px;
+			padding: 8px;
+			margin-right: 8px;
+			vertical-align: middle;
+		}
+		
+		.InputNumber {
+			width: 7% !important;
+			height: 40px;
+			padding: 8px;
+			margin-right: 8px;
+			vertical-align: middle;
+		}
+
+		.SearchButton {
+			@extend .btn, .btn-primary;
+
+			height: 40px;
+			margin-right: 8px;
+		}
+	}
+
+
+	// TABLE WRAPPER
+	&__TableWrapper {
+		@extend .table, .table-striped, .table-hover;
+
+		.Table {
+			width: 100%;
+			margin-top: 12px
+		}
+	}
+
+
+	// TITLE
+	&__Title {
+		@extend .ComponentTitle;
+	}
 }
