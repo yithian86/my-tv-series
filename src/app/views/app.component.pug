@@ -1,10 +1,9 @@
-//-                  Title                   -//
-div(style="text-align:center")
-  h1 Welcome to {{ 'sto cazzo' }}!
+//-                     TITLE                         -//
+.App__MainTitle My Tv Series
 
 
-//-             Search torrent               -//
-div(style="float:left; width:60%; margin:12px")
+//-             SEARCH TORRENT COMPONENT              -//
+.App__SearchTorrentWrapper
   app-search-torrent(
     '[triggerError]'="triggerError"
     '[uploadCurrentSeries]'="uploadCurrentSeries"
@@ -12,22 +11,22 @@ div(style="float:left; width:60%; margin:12px")
     '[searchForm]'="searchForm"
     '[watchList]'="watchList"
   )
+  
+  //-                   STATUS BOXES                  -//
+  .ErrorMessageBox('[hidden]'="!errorMessage") {{ errorMessage }}
 
-  div('[ngClass]'="{'ErrorMessageBox': !!errorMessage}") {{ errorMessage }}
 
-
-//-            My tv series list            -//
-div(style="float:right; width:33%; margin:12px")
+//-                WATCHLIST COMPONENT                -//
+.App__WatchlistWrapper
   app-watchlist(
     '[selectSeries]'="selectSeries"
     '[triggerError]'="triggerError"
     '[watchList]'="watchList"
   )
 
-  //-             Add series form               -//
+  //-             ADD SERIES COMPONENT                -//
   app-add-series-form(
     '[uploadWatchlist]'="uploadWatchlist"
     '[addSeriesForm]'="addSeriesForm"
     '[watchList]'="watchList"
   )
-  
