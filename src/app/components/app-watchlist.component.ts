@@ -23,9 +23,9 @@ export class AppWatchlistComponent implements OnInit {
   public getWatchlistClasses = (series: any): any => {
     return {
       "clickable": !this.isFinished(series),
-      "HasAlreadyAired": this.hasAlreadyAired(series),
-      "AirsToday": this.airsToday(series),
-      "IsFinished": this.isFinished(series)
+      "InfoHasAlreadyAired": this.hasAlreadyAired(series),
+      "InfoAirsToday": this.airsToday(series),
+      "InfoIsFinished": this.isFinished(series)
     };
   }
 

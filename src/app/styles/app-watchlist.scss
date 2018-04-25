@@ -1,43 +1,80 @@
-tr.HasAlreadyAired {
-	background-color: lightskyblue !important;
-	color: white !important;
-}
+@import "styles.scss";
 
-tr.AirsToday {
-	background-color: lightcoral !important;
-	color: white !important;
-}
+.Watchlist {
 
-tr.IsFinished {
-	background-color: green !important;
-	color: white !important;
-}
+	// TABLE
+	&__Table {
+		@extend .table, .table-striped, .table-hover;
 
-.HasAlreadyAired>td, tr.AirsToday>td, tr.IsFinished>td {
-	background-color: transparent !important;
-}
+		&Header {
+			@extend .AppTableHeader;
+		}
 
-td.DeleteButton {
-	vertical-align: middle;
-	text-align: center;
-	font-weight: bold;
-	cursor: pointer;
-}
+		&Body {
 
-.AiredMessage {
-	font-size: 14px;
-	font-weight: bold;
-	text-align: center;
-	color: white;
-	
-	/* Safari */
-	-webkit-transform: rotate(-30deg);
-	/* Firefox */
-	-moz-transform: rotate(-30deg);
-	/* IE */
-	-ms-transform: rotate(-30deg);
-	/* Opera */
-	-o-transform: rotate(-30deg);
-	/* Internet Explorer */
-	filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+			.Info {
+
+				&AiredMessage {
+					font-size: 14px;
+					font-weight: bold;
+					text-align: center;
+					color: white;
+					
+					/* Safari */
+					-webkit-transform: rotate(-30deg);
+					/* Firefox */
+					-moz-transform: rotate(-30deg);
+					/* IE */
+					-ms-transform: rotate(-30deg);
+					/* Opera */
+					-o-transform: rotate(-30deg);
+					/* Internet Explorer */
+					filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+				}
+
+				&HasAlreadyAired {
+					background-color: lightskyblue !important;
+					color: white !important;
+				}
+				
+				&AirsToday {
+					background-color: lightcoral !important;
+					color: white !important;
+				}
+				
+				&IsFinished {
+					background-color: green !important;
+					color: white !important;
+				}
+
+				&HasAlreadyAired>td, &AirsToday>td, &IsFinished>td {
+					background-color: transparent !important;
+				}
+
+				&BoxNextAiring {
+					text-align: center;
+					font-size: 12px;
+				}
+
+				&SeriesName {
+					text-align:left;
+				}
+			}
+
+			.DeleteButton {
+				vertical-align: middle;
+				text-align: center;
+				font-weight: bold;
+				cursor: pointer;
+			}
+		}
+	}
+
+
+	// TITLE
+	&__Title {
+		@extend .ComponentTitle;
+
+		text-align: center;
+	}
 }
