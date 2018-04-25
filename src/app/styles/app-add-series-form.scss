@@ -1,27 +1,37 @@
+@import "styles.scss";
+
 .AddSeries {
 
-	&__Wrapper {
+	&__FormWrapper {
 		text-align: center;
 	}
 
 	&__InputGroup {
 		margin: 8px;
+
+		&Button {
+			@extend .btn, .btn-primary;
+
+			width: 45%;
+			height: 40px;
+		}
+
+		&Field {
+			width: 70%;
+			height: 40px;
+			padding: 8px;
+			vertical-align: middle;
+		}
+
+		&Label {
+			width: 15%;
+			text-align: right;
+		}
 	}
 
-	&__Label {
-		width: 15%;
-		text-align: right;
-	}
+	&__Title {
+		@extend .ComponentTitle;
 
-	&__Input {
-		width: 70%;
-		height: 40px;
-		padding: 8px;
-	vertical-align: middle;
-	}
-
-	&__Button {
-		width: 45%;
-		height: 40px;
+		text-align: center;
 	}
 }
