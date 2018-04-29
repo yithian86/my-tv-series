@@ -160,8 +160,9 @@ export class AppComponent implements OnInit {
     const today: Date = new Date();
 
     if (!!series.wikiLink) {
+      const pageRef: string = encodeURIComponent(series.wikiLink.replace("https://en.wikipedia.org/wiki/", ""));
       // Go to the wikipedia page with the list of episodes
-      this.appService.searchEpisodes(series.wikiLink).subscribe(
+      this.appService.searchEpisodes(pageRef).subscribe(
         response => {
           const nextAiringEpisode: any = {
             date: "",
@@ -170,7 +171,7 @@ export class AppComponent implements OnInit {
             totalEpisodes: -1
           };
           let nextEpIndex: number = -1;
-          const tableList: Array<string> = response["_body"]
+          const tableList: Array<string> = JSON.parse(response).parse.text["*"]
             .replace(/<table class="plainlinks metadata ambox ambox-style ambox-Plot" role="presentation">(?:.|\n)*?<\/table>/g, "")
             .match(/<table class="wikitable plainrowheaders wikiepisodetable[^>]*>(?:.|\n)*?(Directed by)(?:.|\n)*?(Original air date)(?:.|\n)*?<\/table>/g);
           const seasonIndex: number = (series.season <= tableList.length ? series.season : tableList.length) - 1;

@@ -81,11 +81,11 @@ export class AppSearchTorrentComponent implements OnInit {
 
     this.appService.searchTorrents(searchString).subscribe(
       response => {
-        this.searchResult = response["_body"].match(/data-nop title=\"Torrent magnet link\" href="magnet:\?[0-9A-Za-z=:]*&dn=/g);
-        this.titleResult = response["_body"].match(/data-nop title=\"Torrent magnet link\" href="magnet:\?[0-9A-Za-z=:]*&dn=[a-zA-Z0-9.+-]*/g);
-        this.dateResult = response["_body"].match(/<td class="center" title="[0-9 -]*&nbsp;[0-9]*/g);
-        this.seedersResult = response["_body"].match(/<td class="green center">[0-9]*/g);
-        this.sizeResult = response["_body"].match(/<td class="nobr center"> [0-9.]*&nbsp;[a-zA-Z]*/g);
+        this.searchResult = response.match(/data-nop title=\"Torrent magnet link\" href="magnet:\?[0-9A-Za-z=:]*&dn=/g);
+        this.titleResult = response.match(/data-nop title=\"Torrent magnet link\" href="magnet:\?[0-9A-Za-z=:]*&dn=[a-zA-Z0-9.+-]*/g);
+        this.dateResult = response.match(/<td class="center" title="[0-9 -]*&nbsp;[0-9]*/g);
+        this.seedersResult = response.match(/<td class="green center">[0-9]*/g);
+        this.sizeResult = response.match(/<td class="nobr center"> [0-9.]*&nbsp;[a-zA-Z]*/g);
 
         if (!(this.searchResult && this.searchResult.length > 0)) {
           this.setStatusInfo("error", "Sorreh! No episodes available.");
