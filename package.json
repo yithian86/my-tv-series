@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "pug src -P -w & ng serve --open",
+    "start": "ng serve",
     "build": "ng build",
     "build-prod": "ng build --prod",
     "test": "ng test",
