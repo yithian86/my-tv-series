@@ -5,22 +5,19 @@
 //-             SEARCH TORRENT COMPONENT              -//
 .App__SearchTorrentWrapper
   app-search-torrent(
-    '[triggerError]'="triggerError"
+    '[setStatusInfo]'="setStatusInfo"
     '[uploadCurrentSeries]'="uploadCurrentSeries"
     '[currentSeriesIndex]'="currentSeriesIndex"
     '[searchForm]'="searchForm"
     '[watchList]'="watchList"
   )
-  
-  //-                   STATUS BOXES                  -//
-  .ErrorMessageBox('[hidden]'="!errorMessage") {{ errorMessage }}
 
 
 //-                WATCHLIST COMPONENT                -//
 .App__WatchlistWrapper
   app-watchlist(
     '[selectSeries]'="selectSeries"
-    '[triggerError]'="triggerError"
+    '[setStatusInfo]'="setStatusInfo"
     '[watchList]'="watchList"
   )
 
@@ -30,3 +27,8 @@
     '[addSeriesForm]'="addSeriesForm"
     '[watchList]'="watchList"
   )
+
+
+//-                   STATUS BOXES                  -//
+.App__StatusInfoBox('[hidden]'="isStatusInfoHidden()")
+  .App__StatusInfoMessage('[ngClass]'="getStatusInfoClass()") {{ statusInfo.message }}

@@ -11,7 +11,7 @@ import { DomSanitizer } from "@angular/platform-browser";
   providers: [AppService, FirebaseService]
 })
 export class AppSearchTorrentComponent implements OnInit {
-  @Input() triggerError: Function;
+  @Input() setStatusInfo: Function;
   @Input() uploadCurrentSeries: Function;
   @Input() currentSeriesIndex: number;
   @Input() searchForm: FormGroup;
@@ -54,7 +54,7 @@ export class AppSearchTorrentComponent implements OnInit {
 
   // ------------------------------------------------------ ACTIONS -------------------------------------------------------- //
   public searchBtnAction = (): void => {
-    this.triggerError(undefined);
+    this.setStatusInfo(undefined);
 
     // Retrieve input values
     const inputNameString: string = this.searchForm.controls["inputName"].value;
@@ -77,6 +77,8 @@ export class AppSearchTorrentComponent implements OnInit {
 
   // --------------------------------------------------- SERVICES ------------------------------------------------------- //
   public searchTorrents = (searchString: string) => {
+    this.setStatusInfo("info", "Search Torrent: progress...");
+
     this.appService.searchTorrents(searchString).subscribe(
       response => {
         this.searchResult = response["_body"].match(/data-nop title=\"Torrent magnet link\" href="magnet:\?[0-9A-Za-z=:]*&dn=/g);
@@ -86,10 +88,12 @@ export class AppSearchTorrentComponent implements OnInit {
         this.sizeResult = response["_body"].match(/<td class="nobr center"> [0-9.]*&nbsp;[a-zA-Z]*/g);
 
         if (!(this.searchResult && this.searchResult.length > 0)) {
-          this.triggerError("Sorreh! No episodes available.");
+          this.setStatusInfo("error", "Sorreh! No episodes available.");
+        } else {
+          this.setStatusInfo("success", "Search Torrent: completed");
         }
       },
-      error => this.triggerError(<any>error)
+      error => this.setStatusInfo("error", <any>error)
     );
   }
 }

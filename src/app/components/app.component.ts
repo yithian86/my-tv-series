@@ -15,7 +15,7 @@ export class AppComponent implements OnInit {
   public addSeriesForm: FormGroup;
   public searchForm: FormGroup;
   // Error message
-  public errorMessage: string;
+  public statusInfo: any;
 
   public currentSeriesIndex: number;
   public watchList: Array<any>;
@@ -40,6 +40,11 @@ export class AppComponent implements OnInit {
       inputWikiLink: new FormControl("", Validators.required)
     });
 
+    this.statusInfo = {
+      type: "",
+      message: ""
+    };
+
     this.retrieveMySeries();
   }
 
@@ -50,13 +55,47 @@ export class AppComponent implements OnInit {
     this.searchForm.controls["inputEpisode"].setValue(this.watchList[index].episode);
   }
 
-  public triggerError = (message: string) => this.errorMessage = message;
+
+  // ----------------------------------------------- STATUS INFO BOX --------------------------------------------------- //
+
+  public isStatusInfoHidden = (): boolean => !(this.statusInfo && this.statusInfo.type && this.statusInfo.message);
+
+  public getStatusInfoClass = (): any => {
+    const statusInfoObj: any = {};
+
+    if (!this.isStatusInfoHidden()) {
+
+      switch (this.statusInfo.type) {
+        case "error":
+          statusInfoObj["isError"] = true;
+          break;
+
+        case "info":
+          statusInfoObj["isInfo"] = true;
+          break;
+
+        case "success":
+          statusInfoObj["isSuccess"] = true;
+          break;
+      }
+    }
+
+    return statusInfoObj;
+  }
+
+  public setStatusInfo = (type: string, message: string) => {
+    this.statusInfo.type = type;
+    this.statusInfo.message = message;
+  }
 
 
   // --------------------------------------------------- SERVICES ------------------------------------------------------- //
   public retrieveMySeries = () => {
     this.firebaseService.retrieveMySeries().subscribe(
       response => {
+
+        this.setStatusInfo("info", "Retrieving watchlist...");
+
         if (response && response.length > 0) {
           // Clean watchlist from empty entries
           this.watchList = response.filter((wEntry: any) => !!wEntry)
@@ -67,11 +106,13 @@ export class AppComponent implements OnInit {
           this.watchList.forEach((series: any) => {
             this.retrieveNextAiringEpisode(series);
           });
+
+          this.setStatusInfo("success", "Watchlist retrieved successfully!");
         } else {
-          this.triggerError("Error retrieving watchlist, or watchlist empty!");
+          this.setStatusInfo("error", "Error retrieving watchlist, or watchlist empty!");
         }
       },
-      error => this.triggerError(<any>error)
+      error => this.setStatusInfo("error", <any>error)
     );
   }
 
@@ -91,7 +132,7 @@ export class AppComponent implements OnInit {
         console.log("series uploaded successfully!");
         this.retrieveNextAiringEpisode(currentSeries);
       },
-      error => this.triggerError(<any>error)
+      error => this.setStatusInfo("error", <any>error)
     );
   }
 
@@ -111,7 +152,7 @@ export class AppComponent implements OnInit {
         console.log("Watchlist updated successfully!");
         this.retrieveMySeries();
       },
-      error => this.triggerError(<any>error)
+      error => this.setStatusInfo("error", <any>error)
     );
   }
 
@@ -173,7 +214,7 @@ export class AppComponent implements OnInit {
 
           series.nextAiringEpisode = nextAiringEpisode;
         },
-        error => this.triggerError(<any>error)
+        error => this.setStatusInfo("error", <any>error)
       );
     }
   }

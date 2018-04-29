@@ -19,7 +19,6 @@ export class AppService {
   }
 
   public searchEpisodes(url: string): Observable<any> {
-    return this.http
-      .get(url);
+    return this.http.get(url);
   }
 }

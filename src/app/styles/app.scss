@@ -23,4 +23,30 @@
     width: 33%;
     margin:12px;
   }
+
+
+  // STATUS INFO
+  &__StatusInfoBox {
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    font-size: 14px;
+    text-align: center;
+    color: white;
+  
+    .isError {
+      padding: 6px;
+      background-color: lightcoral;
+    }
+  
+    .isInfo {
+      padding: 6px;
+      background-color: #337ab7;
+    }
+  
+    .isSuccess {
+      padding: 6px;
+      background-color: green;
+    }
+  }
 }

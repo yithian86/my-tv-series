@@ -9,7 +9,7 @@ import { FirebaseService } from "../services/firebase.service";
 })
 export class AppWatchlistComponent implements OnInit {
   @Input() selectSeries: Function;
-  @Input() triggerError: Function;
+  @Input() setStatusInfo: Function;
   @Input() watchList: Array<any>;
 
 
@@ -79,7 +79,7 @@ export class AppWatchlistComponent implements OnInit {
     //   response => {
     //     console.log("Series removed successfully!", this.watchList);
     //   },
-    //   error => this.triggerError(<any>error)
+    //   error => this.setStatusInfo("error", <any>error)
     // );
   }
 }
