@@ -10,7 +10,7 @@
 		margin: 8px;
 
 		&Button {
-			@extend .btn, .btn-primary;
+			@extend .btn, .BaseButton;
 
 			width: 45%;
 			height: 40px;

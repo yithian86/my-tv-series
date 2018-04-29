@@ -7,7 +7,7 @@
 }
 
 .table-hover tbody tr:hover td, .table-hover tbody tr:hover td a, .table-hover tbody tr:hover th, .theader-dark {
-	background-color: #337ab7;
+	background-color: $blue-color;
 	color: white !important;
 }
 
@@ -23,4 +23,9 @@ th, td {
 
 .AppTableHeader {
   @extend .theader-dark;
+}
+
+.BaseButton {
+  background-color: $blue-color;
+	color: white !important;
 }

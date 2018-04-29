@@ -23,7 +23,7 @@
 		}
 
 		.SearchButton {
-			@extend .btn, .btn-primary;
+			@extend .btn, .BaseButton;
 
 			height: 40px;
 			margin-right: 8px;
