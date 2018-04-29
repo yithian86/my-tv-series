@@ -158,6 +158,7 @@ export class AppComponent implements OnInit {
 
   public retrieveNextAiringEpisode = (series: any) => {
     const today: Date = new Date();
+    today.setHours(0, 0, 0, 0);
 
     if (!!series.wikiLink) {
       const pageRef: string = encodeURIComponent(series.wikiLink.replace("https://en.wikipedia.org/wiki/", ""));
@@ -189,9 +190,7 @@ export class AppComponent implements OnInit {
             nextDates = nextDates.sort();
             nextAiringEpisode.date = nextDates.find((date: number, index: number) => {
               nextEpIndex = index;
-              return today.getUTCDate() <= new Date(date).getUTCDate()
-                && today.getUTCMonth() <= new Date(date).getUTCMonth()
-                && today.getUTCFullYear() <= new Date(date).getUTCFullYear();
+              return today.getTime() <= date;
             });
             if (!nextAiringEpisode.date) {
               nextAiringEpisode.date = nextDates[nextDates.length - 1];
