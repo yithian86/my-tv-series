@@ -2,6 +2,20 @@
 
 .SearchTorrent {
 
+	// TORRENT SELECTOR
+	&__TorrentSelectorWrapper {
+		margin-bottom: 16px;
+
+		.SelectorText {
+			font-size: 18px;
+			margin: 4px;
+		}
+
+		.SelectorElement {
+			margin: 4px;
+		}
+	}
+
 	// FORM WRAPPER
 	&__FormWrapper {
 		margin-bottom: 16px;

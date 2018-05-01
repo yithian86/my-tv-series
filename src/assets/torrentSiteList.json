@@ -1,0 +1,67 @@
+[
+      {
+        "name": "kickass.cd",
+        "url": "https://kickass.cd/search.php?q=",
+        "regex": {
+          "title": {
+            "results": [{ "reg": "data-nop title=\"Torrent magnet link\" href=\"magnet:\\?[0-9A-Za-z=:]*&dn=[a-zA-Z0-9.+-]*", "rule": "match" }],
+            "magnet": [{ "reg": "data-nop title=\"Torrent magnet link\" href=\"magnet:\\?[0-9A-Za-z=:]*&dn=", "rule": "replace" }]
+          },
+          "date": {
+            "results": [{ "reg": "<td class=\"center\" title=\"[0-9 -]*&nbsp;[0-9]*", "rule": "match" }],
+            "magnet": [{ "reg": "<td class=\"center\" title=\"", "rule": "replace" }]
+          },
+          "seeders": {
+            "results": [{ "reg": "<td class=\"green center\">[0-9]*", "rule": "match" }],
+            "magnet": [{ "reg": "<td class=\"green center\">", "rule": "replace" }]
+          },
+          "size": {
+            "results": [{ "reg": "<td class=\"nobr center\"> [0-9.]*&nbsp;[a-zA-Z]*", "rule": "match" }],
+            "magnet": [{ "reg": "<td class=\"nobr center\"> ", "rule": "replace" }]
+          },
+          "link": {
+            "results": [{ "reg": "data-nop title=\"Torrent magnet link\" href=\"magnet:\\?[0-9A-Za-z=:]*&dn=", "rule": "match" }],
+            "magnet": [{ "reg": "data-nop title=\"Torrent magnet link\" href=\"", "rule": "replace" }]
+          }
+        }
+      },
+      {
+        "name": "rarbg.to",
+        "url": "https://rarbg.to/torrents.php?search=",
+        "hasTorrentPage": true,
+        "regex": {
+          "title": {
+            "results": [{ "reg": "<tr class=\"lista2\">?.*?([0-9]*.[0-9]* MB).*?<\/tr>", "rule": "match" }],
+            "magnet": [
+              { "reg": "(title=)((\")(([^ ]*))(\"))", "rule": "matchJoin" },
+              { "reg": "\"", "rule": "replace" },
+              { "reg": "title=", "rule": "replace" }
+            ]
+          },
+          "date": {
+            "results": [{ "reg": "<tr class=\"lista2\">?.*?([0-9]*.[0-9]* MB).*?<\/tr>", "rule": "match" }],
+            "magnet": [{ "reg": "<tr class=\"lista2\">?.*?([0-9]*.[0-9]* MB).*?<\/tr>", "rule": "replace" }]
+          },
+          "seeders": {
+            "results": [{ "reg": "((font color=\"#)([a-zA-Z0-9]*)(\">))([0-9]*)", "rule": "match" }],
+            "magnet": [{ "reg": "((font color=\"#)([a-zA-Z0-9]*)(\">))", "rule": "replace" }]
+          },
+          "size": {
+            "results": [{ "reg": "<tr class=\"lista2\">?.*?([0-9]*.[0-9]* MB).*?<\/tr>", "rule": "match" }],
+            "magnet": [{ "reg": "[0-9]*.[0-9]* MB", "rule": "matchJoin" }]
+          },
+          "link": {
+            "results": [{ "reg": "<tr class=\"lista2\">?.*?([0-9]*.[0-9]* MB).*?<\/tr>", "rule": "match" }],
+            "magnet": [
+              { "reg": "\" href=\"[a-zA-Z0-9/]*\"", "rule": "matchJoin" },
+              { "reg": "\"", "rule": "replace" },
+              { "reg": " href=", "rule": "replaceWith", "replaceWith": "https://rarbg.to" }
+            ],
+            "pageMagnet": [
+              { "reg": "magnet.*\"><i", "rule": "matchJoin" },
+              { "reg": "\"><i", "rule": "replace" }
+            ]
+          }
+        }
+      }
+    ]

@@ -1,8 +1,18 @@
+//-               TITLE                   -//
+.SearchTorrent__Title Scavenge your tv series:
+
+//-        TORRENT SITE SELECTOR          -//
+.SearchTorrent__TorrentSelectorWrapper
+  span.SelectorText Torrent site:
+
+  span.SelectorElement
+    select([(ngModel)]="selectedTorrentSite" '(change)'="tableData = []")
+      option('*ngFor'="let torrentSite of torrentSiteList; let i=index" '[ngValue]'="torrentSite") {{ torrentSite.name }}
+
+
 //-             SEARCH FORM               -//
 .SearchTorrent__FormWrapper
   form('[formGroup]'="searchForm")
-    //- Title
-    .SearchTorrent__Title Scavenge your tv series:
 
     //- Input fields
     input.InputName(type="text" formControlName="inputName" required)
@@ -25,9 +35,10 @@
         //- th Date
 
     tbody
-      tr('*ngFor'="let res of searchResult; let i=index" '[attr.data-index]'="i")
+      tr('*ngFor'="let tableEntry of tableData; let i=index" '[attr.data-index]'="i")
         td.SearchTorrent__TableMagnetLink
-            a('[href]'="getMagnetLink(res)") {{ getMagnetTitle(titleResult[i]) }}
-        td {{ getMagnetSize(sizeResult[i]) }}
-        td {{ getMagnetSeeders(seedersResult[i]) }}
+          a('*ngIf'="!selectedTorrentSite.hasTorrentPage" '[href]'="tableEntry.link" ) {{ tableEntry.title }}
+          label('*ngIf'="selectedTorrentSite.hasTorrentPage" '(click)'="openLinkFromTorrentPage(i)" ) {{ tableEntry.title }}
+        td {{ tableEntry.size }}
+        td {{ tableEntry.seeders }}
         //- td {{getMagnetDate(dateResult[i])}}

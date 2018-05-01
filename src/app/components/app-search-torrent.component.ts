@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from "@angular/core";
+import { Component, OnInit, Input, AnimationKeyframe } from "@angular/core";
 import { AppService } from "../services/app.service";
 import { FirebaseService } from "../services/firebase.service";
 import { FormGroup, FormBuilder, Validators, FormControl } from "@angular/forms";
@@ -17,11 +17,11 @@ export class AppSearchTorrentComponent implements OnInit {
   @Input() searchForm: FormGroup;
   @Input() watchList: Array<any>;
 
-  public searchResult: any;
-  public titleResult: any;
-  public dateResult: any;
-  public seedersResult: any;
-  public sizeResult: any;
+  // Torrent site selector
+  public selectedTorrentSite: any;
+  public torrentSiteList: Array<any>;
+  // Search Results
+  public tableData: Array<any>;
 
   public constructor(
     private formBuilder: FormBuilder,
@@ -30,26 +30,32 @@ export class AppSearchTorrentComponent implements OnInit {
     private sanitizer: DomSanitizer
   ) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.retrieveTorrentSiteList();
+
+    this.tableData = [];
+  }
 
 
   // ----------------------------------------------- GETTERS AND SETTERS -------------------------------------------------- //
-  public getMagnetTitle = (title: string) => title ? title.replace(/data-nop title=\"Torrent magnet link\" href="magnet:\?[0-9A-Za-z=:]*&dn=/g, "") : "";
+  public getMagnetTitle = (title: string) => title ? this.getFromRegexRules(title, this.selectedTorrentSite.regex.title.magnet) : "-";
 
-  public getMagnetDate = (date: string) => date ? date.replace("<td class=\"center\" title=\"", "").replace("&nbsp;", "-") : "";
+  public getMagnetDate = (date: string) => date ? this.getFromRegexRules(date, this.selectedTorrentSite.regex.date.magnet).replace("&nbsp;", "-") : "-";
 
   public getMagnetLink = (dirtyLink: string) => {
-    const cleanLink: string = dirtyLink
-      .replace("data-nop title=\"Torrent magnet link\" href=\"", "")
-      .replace("&dn=", "")
-      .substring(0, dirtyLink.length - 3);
-    // Remove 'unsafe' string from link and other unwanted crap
-    return this.sanitizer.bypassSecurityTrustUrl(cleanLink);
+    const cleanLink: string = this.getFromRegexRules(dirtyLink, this.selectedTorrentSite.regex.link.magnet);
+
+    if (this.selectedTorrentSite.hasTorrentPage) {
+      return cleanLink;
+    } else {
+      // Remove 'unsafe' string from link and other unwanted crap
+      return this.sanitizer.bypassSecurityTrustUrl(cleanLink);
+    }
   }
 
-  public getMagnetSeeders = (date: string) => date ? date.replace("<td class=\"green center\">", "") : "";
+  public getMagnetSeeders = (date: string) => date ? this.getFromRegexRules(date, this.selectedTorrentSite.regex.seeders.magnet) : "-";
 
-  public getMagnetSize = (size: string) => size ? size.replace("<td class=\"nobr center\"> ", "").replace("&nbsp;", " ") : "";
+  public getMagnetSize = (size: string) => size ? this.getFromRegexRules(size, this.selectedTorrentSite.regex.size.magnet).replace("&nbsp;", " ") : "-";
 
 
   // ------------------------------------------------------ ACTIONS -------------------------------------------------------- //
@@ -76,24 +82,95 @@ export class AppSearchTorrentComponent implements OnInit {
 
 
   // --------------------------------------------------- SERVICES ------------------------------------------------------- //
-  public searchTorrents = (searchString: string) => {
+  public retrieveTorrentSiteList = (): void => {
+    this.appService.getTorrentSiteList().subscribe(
+      response => {
+        this.torrentSiteList = response;
+
+        this.selectedTorrentSite = this.torrentSiteList[0];
+      },
+      error => this.setStatusInfo("error", <any>error)
+    );
+  }
+
+  public searchTorrents = (searchString: string): void => {
     this.setStatusInfo("info", "Search Torrent: progress...");
 
-    this.appService.searchTorrents(searchString).subscribe(
+    this.appService.searchTorrents(searchString, this.selectedTorrentSite.url).subscribe(
       response => {
-        this.searchResult = response.match(/data-nop title=\"Torrent magnet link\" href="magnet:\?[0-9A-Za-z=:]*&dn=/g);
-        this.titleResult = response.match(/data-nop title=\"Torrent magnet link\" href="magnet:\?[0-9A-Za-z=:]*&dn=[a-zA-Z0-9.+-]*/g);
-        this.dateResult = response.match(/<td class="center" title="[0-9 -]*&nbsp;[0-9]*/g);
-        this.seedersResult = response.match(/<td class="green center">[0-9]*/g);
-        this.sizeResult = response.match(/<td class="nobr center"> [0-9.]*&nbsp;[a-zA-Z]*/g);
+        this.buildTableData(response);
 
-        if (!(this.searchResult && this.searchResult.length > 0)) {
-          this.setStatusInfo("error", "Sorreh! No episodes available.");
-        } else {
+        if (this.tableData && this.tableData.length > 0) {
           this.setStatusInfo("success", "Search Torrent: completed");
         }
       },
       error => this.setStatusInfo("error", <any>error)
     );
+  }
+
+  public openLinkFromTorrentPage = (url: string): any => {
+    this.setStatusInfo("info", "Getting torrent page: progress...");
+
+    this.appService.getTorrentPage(url).subscribe(
+      response => {
+        const link: string = this.getFromRegexRules(response, this.selectedTorrentSite.regex.link.pageMagnet);
+        // Remove 'unsafe' string from link and other unwanted crap
+        const cleanLink: any = this.sanitizer.bypassSecurityTrustUrl(link);
+        // Open link
+        window.open(cleanLink.changingThisBreaksApplicationSecurity);
+      },
+      error => this.setStatusInfo("error", <any>error)
+    );
+  }
+
+  // ---------------------------------------------------- TABLE --------------------------------------------------------- //
+  private buildTableData = (response: any) => {
+    let tableEntry: any = {};
+
+    const linkResults: Array<string> = this.getFromRegexRules(response, this.selectedTorrentSite.regex.link.results);
+    const titleResults: Array<string> = this.getFromRegexRules(response, this.selectedTorrentSite.regex.title.results);
+    const dateResults: Array<string> = this.getFromRegexRules(response, this.selectedTorrentSite.regex.date.results);
+    const seedersResults: Array<string> = this.getFromRegexRules(response, this.selectedTorrentSite.regex.seeders.results);
+    const sizeResults: Array<string> = this.getFromRegexRules(response, this.selectedTorrentSite.regex.size.results);
+
+    if (linkResults && linkResults.length > 0) {
+      linkResults.forEach((result: any, index: number) => {
+        tableEntry.date = this.getMagnetDate(dateResults[index]);
+        tableEntry.link = this.getMagnetLink(result);
+        tableEntry.seeders = this.getMagnetSeeders(seedersResults[index]);
+        tableEntry.size = this.getMagnetSize(sizeResults[index]);
+        tableEntry.title = this.getMagnetTitle(titleResults[index]);
+
+        this.tableData.push(tableEntry);
+        tableEntry = {};
+      });
+    } else {
+      this.setStatusInfo("error", "Search Torrent: an error occurred while building table! Probably torrent site is down or something.");
+    }
+  }
+
+  private getFromRegexRules = (element: string, stringRules: Array<any>): any => {
+    let result: any = element;
+    stringRules.forEach(e => {
+      switch (e.rule) {
+        case "match":
+          result = result.match(new RegExp(e.reg, "g"));
+          break;
+
+        case "matchJoin":
+          result = result.match(new RegExp(e.reg, "g"))[0];
+          break;
+
+        case "replace":
+          result = result.replace(new RegExp(e.reg, "g"), "");
+          break;
+
+        case "replaceWith":
+          result = result.replace(new RegExp(e.reg, "g"), e.replaceWith);
+          break;
+      }
+    });
+
+    return result;
   }
 }
