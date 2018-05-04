@@ -95,6 +95,7 @@ export class AppSearchTorrentComponent implements OnInit {
 
   public searchTorrents = (searchString: string): void => {
     this.setStatusInfo("info", "Search Torrent: progress...");
+    this.tableData = [];
 
     this.appService.searchTorrents(searchString, this.selectedTorrentSite.url).subscribe(
       response => {
@@ -135,11 +136,23 @@ export class AppSearchTorrentComponent implements OnInit {
 
     if (linkResults && linkResults.length > 0) {
       linkResults.forEach((result: any, index: number) => {
-        tableEntry.date = this.getMagnetDate(dateResults[index]);
+        if (dateResults && dateResults.length > 0) {
+          tableEntry.date = this.getMagnetDate(dateResults[index]);
+        }
+
         tableEntry.link = this.getMagnetLink(result);
-        tableEntry.seeders = this.getMagnetSeeders(seedersResults[index]);
-        tableEntry.size = this.getMagnetSize(sizeResults[index]);
-        tableEntry.title = this.getMagnetTitle(titleResults[index]);
+
+        if (seedersResults && seedersResults.length > 0) {
+          tableEntry.seeders = this.getMagnetSeeders(seedersResults[index]);
+        }
+
+        if (sizeResults && sizeResults.length > 0) {
+          tableEntry.size = this.getMagnetSize(sizeResults[index]);
+        }
+
+        if (titleResults && titleResults.length > 0) {
+          tableEntry.title = this.getMagnetTitle(titleResults[index]);
+        }
 
         this.tableData.push(tableEntry);
         tableEntry = {};
