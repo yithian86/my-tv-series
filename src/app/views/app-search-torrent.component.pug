@@ -38,7 +38,7 @@
       tr('*ngFor'="let tableEntry of tableData; let i=index" '[attr.data-index]'="i")
         td.SearchTorrent__TableMagnetLink
           a('*ngIf'="!selectedTorrentSite.hasTorrentPage" '[href]'="tableEntry.link" ) {{ tableEntry.title }}
-          label('*ngIf'="selectedTorrentSite.hasTorrentPage" '(click)'="openLinkFromTorrentPage(i)" ) {{ tableEntry.title }}
+          label('*ngIf'="selectedTorrentSite.hasTorrentPage" '(click)'="openMagnetLinkFromTorrentPage(i)" ) {{ tableEntry.title }}
         td {{ tableEntry.size }}
         td {{ tableEntry.seeders }}
         //- td {{getMagnetDate(dateResult[i])}}

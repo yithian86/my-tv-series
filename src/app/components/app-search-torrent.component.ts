@@ -109,16 +109,18 @@ export class AppSearchTorrentComponent implements OnInit {
     );
   }
 
-  public openLinkFromTorrentPage = (url: string): any => {
+  public openMagnetLinkFromTorrentPage = (index: number): any => {
     this.setStatusInfo("info", "Getting torrent page: progress...");
 
-    this.appService.getTorrentPage(url).subscribe(
+    const pageLink: string = this.tableData[index].link;
+    this.appService.getTorrentPage(pageLink).subscribe(
       response => {
         const link: string = this.getFromRegexRules(response, this.selectedTorrentSite.regex.link.pageMagnet);
         // Remove 'unsafe' string from link and other unwanted crap
         const cleanLink: any = this.sanitizer.bypassSecurityTrustUrl(link);
         // Open link
         window.open(cleanLink.changingThisBreaksApplicationSecurity);
+        this.setStatusInfo("success", "Getting torrent page: complete.");
       },
       error => this.setStatusInfo("error", <any>error)
     );
